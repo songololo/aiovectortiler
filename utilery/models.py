@@ -1,5 +1,4 @@
-from . import config
-
+from utilery import tile_handler
 
 class Recipe(dict):
 
@@ -13,7 +12,7 @@ class Recipe(dict):
             self.layers[layer['name']] = Layer(self, layer)
 
     def __getattr__(self, attr):
-        return self.get(attr, getattr(config, attr.upper(), None))
+        return self.get(attr, getattr(tile_handler.Configs.server, attr.upper(), None))
 
 
 class Layer(dict):

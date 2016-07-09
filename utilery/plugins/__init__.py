@@ -1,6 +1,5 @@
 from utilery.utils import import_by_path
-from utilery import config
-
+from utilery import tile_handler
 
 class Plugins(object):
 
@@ -9,7 +8,7 @@ class Plugins(object):
 
     @classmethod
     def load(cls):
-        for path in config.BUILTIN_PLUGINS + config.PLUGINS:
+        for path in tile_handler.Configs.server.BUILTIN_PLUGINS + tile_handler.Configs.server.PLUGINS:
             cls.register_plugin(import_by_path(path)())
 
     @classmethod

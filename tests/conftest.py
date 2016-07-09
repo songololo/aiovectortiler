@@ -27,9 +27,9 @@ def pytest_configure(config):
     from utilery import config as uconfig
     uconfig.RECIPES = []
     uconfig.PLUGINS = [TestPlugin]
-    from utilery import core
+    from utilery import db_handler
     from utilery.models import Recipe
-    core.RECIPES['default'] = Recipe({
+    db_handler.RECIPES['default'] = Recipe({
         'name': 'default',
         'layers': [{
             'name': 'mylayer',
@@ -62,7 +62,7 @@ def fetchall(monkeypatch):
 
 @pytest.fixture
 def client():
-    from utilery.views import app
+    from utilery.tile_handler import app
     return Client(app, BaseResponse)
 
 
@@ -93,8 +93,8 @@ class MonkeyPatchWrapper(object):
 
 @pytest.fixture
 def recipes(monkeypatch):
-    from utilery import core
-    return MonkeyPatchWrapper(monkeypatch, core.RECIPES)
+    from utilery import db_handler
+    return MonkeyPatchWrapper(monkeypatch, db_handler.RECIPES)
 
 
 @pytest.fixture()

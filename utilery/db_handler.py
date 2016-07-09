@@ -7,14 +7,14 @@ import psycopg2.extras
 import yaml
 from pathlib import Path
 
-from . import config
 from .plugins import Plugins
 from .models import Recipe
 
 logger = logging.getLogger(__name__)
 
+from utilery import tile_handler
 
-if config.DEBUG:
+if tile_handler.Configs.server.debug:
     logger.setLevel(logging.DEBUG)
     logger.addHandler(logging.StreamHandler())
 

@@ -5,8 +5,8 @@ layers:
   queries:
     - minzoom: 12
       maxzoom: 20
-      sql: |-
-        SELECT
+      sql: |
+        -SELECT
           way,
           highway,
           name,
@@ -32,8 +32,8 @@ layers:
   queries:
     - minzoom: 8
       maxzoom: 13
-      sql: |-
-        SELECT
+      sql: |
+        -SELECT
             name,
             place AS kind,
             way,

@@ -35,7 +35,7 @@ setup(
         'Topic :: Scientific/Engineering :: GIS',
 
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
     ],
     keywords='openstreetmap vectortile postgis',
     packages=find_packages(exclude=['tests']),
