@@ -4,32 +4,39 @@ import logging
 import argparse
 from aiohttp import web
 from utilery.config_handler import Configs
-
+import utilery
 
 # parse arguments
 ARGS = argparse.ArgumentParser(description="asyncio python tile server")
 ARGS.add_argument('--server_configs',
+                  '-s',
                   action="store",
                   dest='server_configs',
                   default='../configs_server_example.yaml',
                   help='The YAML database config file')
-ARGS.add_argument('--layer_configs',
+ARGS.add_argument('--layer_recipes_folder',
+                  '-r',
                   action="store",
                   dest="layer_configs",
-                  default='../configs_layers_example.yaml',
+                  default='../layer_recipe_examples/',
                   help='The YAML layers configs file')
+ARGS.add_argument('--version', action='version', version=utilery.VERSION)
+
 args = ARGS.parse_args()
 
 
 # write configs
 Configs.init_server_configs(os.path.abspath(args.server_configs))
-Configs.init_layer_configs(os.path.abspath(args.layer_configs))
 
+recipes = []
+for file in os.listdir(os.path.abspath(args.layer_configs)):
+    if file.endswith('.yaml') or file.endswith('.yml'):
+        Configs.init_layer_recipes(os.path.join(os.path.abspath(args.layer_configs), file))
 
 # setup logging
-logging.basicConfig(stream=sys.stdout, level=Configs.layers['log_level'].upper())
+logging.basicConfig(stream=sys.stdout, level=Configs.server['log_level'].upper())
 logger = logging.getLogger(__name__)
-logger.warning('STARTING TILE SERVER APP')
+logger.info('STARTING TILE SERVER APP')
 
 
 from utilery.tile_handler import ServePBF, ServeGeoJSON, ServeJSON, TileJson

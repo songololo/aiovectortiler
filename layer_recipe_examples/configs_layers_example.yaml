@@ -1,6 +1,7 @@
 buffer: 128
+name: 'example layer'
 layers:
-- name: "roads"
+- name: 'roads'
   clip: true
   queries:
     - minzoom: 12
@@ -28,7 +29,7 @@ layers:
             mz_road_level <= 12
         ORDER BY
           sort_key ASC
-- name: "places"
+- name: 'places'
   queries:
     - minzoom: 8
       maxzoom: 13

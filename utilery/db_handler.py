@@ -1,10 +1,10 @@
 import atexit
 import logging
 import time
-
 import psycopg2
 import psycopg2.extras
 import yaml
+
 from pathlib import Path
 
 from .plugins import Plugins
@@ -12,9 +12,9 @@ from .models import Recipe
 
 logger = logging.getLogger(__name__)
 
-from utilery import tile_handler
+from utilery.config_handler import Configs
 
-if tile_handler.Configs.server.debug:
+if Configs.server['debug']:
     logger.setLevel(logging.DEBUG)
     logger.addHandler(logging.StreamHandler())
 
@@ -55,24 +55,6 @@ atexit.register(close_connections)
 
 
 Plugins.load()
-Plugins.hook('before_load', config=config)
-
-
-def load_recipe(data):
-    name = data.get('name', 'default')
-    if name in RECIPES:
-        raise ValueError('Recipe with name {} already exist'.format(name))
-    data['name'] = name
-    RECIPES[name] = Recipe(data)
-    if len(RECIPES) == 1 and name != 'default':
-        RECIPES['default'] = RECIPES[data['name']]
-
-
-recipes = config.RECIPES
-if isinstance(recipes, str):
-    recipes = [recipes]
-for recipe in recipes:
-    with Path(recipe).open() as f:
-        load_recipe(yaml.load(f.read()))
+Plugins.hook('before_load', config=Configs)
 
 Plugins.hook('load', config=config, recipes=RECIPES)

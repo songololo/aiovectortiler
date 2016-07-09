@@ -1,9 +1,9 @@
-from utilery import config
+from utilery.config_handler import Configs
 
 
 class CORS(object):
 
     def on_response(self, response, request):
-        if config.CORS:
+        if Configs.server['CORS']:
             response.headers["Access-Control-Allow-Origin"] = config.CORS
             response.headers["Access-Control-Allow-Headers"] = "X-Requested-With"  # noqa
