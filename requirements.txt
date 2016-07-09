@@ -5,6 +5,7 @@ protobuf>=3.0.0b3
 psycopg2
 aiopg
 aiohttp
+aiohttp_cors
 ujson
 cchardet
 argparse

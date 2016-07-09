@@ -6,15 +6,12 @@ import psycopg2
 import logging
 
 import aiohttp.errors
+from utilery.config_handler import Configs
 
-from .db_handler import DB, RECIPES
+from utilery.db_handler import DB
 
 logger = logging.getLogger(__name__)
 
-# configs namespace
-class Configs:
-    server = None
-    layers = None
 
 class ServeTile():
 
@@ -32,18 +29,22 @@ class ServeTile():
     def post_process(self):
         pass
 
-    def fetch_layer(self, request):
+    def serve(self, request):
         self.x = request.match_info['x']
         self.y = request.match_info['y']
         self.zoom = request.match_info['z']
         self.layer = request.match_info['layer']
+        try:
+            self.recipe = request.match_info['recipe']
+        except KeyError:
+            self.recipe = Configs.server['default_recipe']
 
         bounds = mercantile.bounds(self.x, self.y, self.zoom)
         self.west, self.south = mercantile.xy(bounds.west, bounds.south)
         self.east, self.north = mercantile.xy(bounds.east, bounds.north)
 
-        if self.layer not in Configs.layers.layers.values():
-            logger.error('Layer {0} not found in layer config file'.format(self.layer))
+        if self.layer not in Configs.recipes[self.recipe].layers.values():
+            logger.error('Layer {0} not found in recipe {1}'.format(self.layer, self.recipe))
             return aiohttp.errors.HttpBadRequest('Layer {0} not found in layer config file'.format(self.layer))
         else:
             self.process_layer()

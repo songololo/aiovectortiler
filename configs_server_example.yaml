@@ -1,7 +1,18 @@
-databases:
-- 'dbname=my_db user=my_user password= host=localhost'
+log_level: 'info'
+database_connection_string: 'dbname=my_db user=my_user password= host=localhost'
+default_recipe: 'example recipe'
+SRID: 3857
+scale: 1
+buffer: 0
+clip: False
+CORS: '*'
 
-tilejson_spec: >
+builtin_plugins:
+- utilery.plugins.builtins.CORS
+
+plugins: []
+
+tileJSON_spec: >
   {tilejson: '2.1.0',
   name: 'utilery',
   description: 'A lite vector tile server',
@@ -10,14 +21,3 @@ tilejson_spec: >
   tiles: [
     'http://vector.myserver.org/all/{z}/{x}/{y}.pbf'
   ]}
-
-builtin_plugins:
-- utilery.plugins.builtins.CORS
-plugins: []
-debug: True
-srid: 3857
-scale: 1
-buffer: 0
-clip: False
-CORS: '*'
-log_level: 'info'

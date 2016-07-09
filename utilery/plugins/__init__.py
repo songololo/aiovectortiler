@@ -1,5 +1,4 @@
 from utilery.utils import import_by_path
-from utilery import tile_handler
 from utilery.config_handler import Configs
 
 class Plugins(object):
