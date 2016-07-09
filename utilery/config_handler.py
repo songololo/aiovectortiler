@@ -16,7 +16,7 @@ class Configs:
     def init_layer_recipes(cls, recipe_configs):
         with open(recipe_configs) as r_c:
             recipe = yaml.load(r_c.read())
-            name = recipe['name']
+            name = recipe_configs.split('/')[-1]
             cls.recipes[name] = Recipe(recipe)
 
 '''

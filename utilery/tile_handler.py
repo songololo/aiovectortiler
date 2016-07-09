@@ -30,14 +30,16 @@ class ServeTile():
         pass
 
     def serve(self, request):
-        self.x = request.match_info['x']
-        self.y = request.match_info['y']
-        self.zoom = request.match_info['z']
+        self.x = int(request.match_info['x'])
+        self.y = int(request.match_info['y'])
+        self.zoom = int(request.match_info['z'])
         self.layer = request.match_info['layer']
         try:
             self.recipe = request.match_info['recipe']
         except KeyError:
             self.recipe = Configs.server['default_recipe']
+
+        print(self.x, self.y, self.zoom, self.layer, self.recipe)
 
         bounds = mercantile.bounds(self.x, self.y, self.zoom)
         self.west, self.south = mercantile.xy(bounds.west, bounds.south)

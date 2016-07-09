@@ -1,4 +1,8 @@
-import os
+import os,sys,inspect
+dir_current = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+dir_parent = os.path.dirname(dir_current)
+sys.path.insert(0, dir_parent)
+
 import sys
 import logging
 import argparse
@@ -50,7 +54,7 @@ app = web.Application()
 
 # setup url routes and corresponding handlers
 async def request_pbf(request):
-    response = ServePBF.serve(request)
+    response = ServePBF().serve(request)
     return web.Response(body=response)
 app.router.add_route('GET', '/{layer}/{z}/{x}/{y}.pbf', request_pbf)
 app.router.add_route('GET', '/{recipe}/{layer}/{z}/{x}/{y}.pbf', request_pbf)
@@ -58,19 +62,19 @@ app.router.add_route('GET', '/{layer}/{z}/{x}/{y}.mvt', request_pbf)
 app.router.add_route('GET', '/{recipe}/{layer}/{z}/{x}/{y}.mvt', request_pbf)
 
 async def request_geojson(request):
-    response = ServeGeoJSON.serve(request)
+    response = ServeGeoJSON().serve(request)
     return web.Response(body=response)
 app.router.add_route('GET', '/{layer}/{z}/{x}/{y}.geojson', request_geojson)
 app.router.add_route('GET', '/{recipe}/{layer}/{z}/{x}/{y}.geojson', request_geojson)
 
 async def request_json(request):
-    response = ServeJSON.serve(request)
+    response = ServeJSON().serve(request)
     return web.Response(body=response)
 app.router.add_route('GET', '/{layer}/{z}/{x}/{y}.json', request_json)
 app.router.add_route('GET', '/{recipe}/{layer}/{z}/{x}/{y}.json', request_json)
 
 async def request_tilejson(request):
-    response = TileJson.get()
+    response = TileJson().get()
     return web.Response(body=response)
 app.router.add_route('GET', '/tilejson/mvt.json', request_tilejson)
 app.router.add_route('GET', '/{recipe}/tilejson/mvt.json', request_tilejson)

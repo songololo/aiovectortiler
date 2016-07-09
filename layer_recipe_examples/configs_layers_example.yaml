@@ -1,5 +1,4 @@
 buffer: 128
-name: 'example recipe'
 layers:
 - name: 'roads'
   clip: true
