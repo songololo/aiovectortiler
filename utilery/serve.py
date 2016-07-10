@@ -92,9 +92,9 @@ async def request_tilejson(request):
 app.router.add_route('GET', '/tilejson/mvt.json', request_tilejson)
 
 
-# configure CORS
+# configure CORS TODO: look at how this interacts with plugin?
 cors = aiohttp_cors.setup(app, defaults={
-    "*": aiohttp_cors.ResourceOptions(
+    Configs.server['CORS']: aiohttp_cors.ResourceOptions(
         allow_credentials=True,
         expose_headers='*',
         allow_headers='*'
