@@ -19,19 +19,16 @@ from utilery.tile_handler import ServePBF, ServeGeoJSON, ServeJSON, TileJson
 # parse arguments from command line
 ARGS = argparse.ArgumentParser(description="asyncio python tile server")
 ARGS.add_argument('--server_configs',
-                  '-s',
                   action="store",
                   dest='server_configs',
                   default='../configs_server_example.yaml',
                   help='The YAML database config file')
-ARGS.add_argument('--layer_recipes_folder',
-                  '-r',
+ARGS.add_argument('--layer_recipes',
                   action="store",
                   dest="layer_configs",
                   default='../layer_recipe_examples/',
                   help='The YAML layers configs file')
-ARGS.add_argument('--host',
-                  '-H',
+ARGS.add_argument('--host_address',
                   action="store",
                   dest="host",
                   default='localhost',
