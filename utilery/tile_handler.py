@@ -15,10 +15,10 @@ logger = logging.getLogger(__name__)
 
 class ServeTile():
 
+    # parameters shared by all queries
     SQL_TEMPLATE = "SELECT {way}, * FROM ({sql}) AS data WHERE ST_IsValid(way) AND ST_Intersects(way, {bbox})"  # noqa
     GEOMETRY = "{way}"
 
-    methods = ['GET']
     RADIUS = 6378137
     CIRCUM = 2 * math.pi * RADIUS
     SIZE = 256
@@ -26,163 +26,159 @@ class ServeTile():
     CONTENT = None
     CONTENT_TYPE = None
 
-    def post_process(self):
-        pass
-
-    def serve(self, request):
-        self.x = int(request.match_info['x'])
-        self.y = int(request.match_info['y'])
-        self.zoom = int(request.match_info['z'])
-        self.layer = request.match_info['layer']
+    @classmethod
+    async def serve(cls, request):
+        # fetch query parameters from request info
+        x = int(request.match_info['x'])
+        y = int(request.match_info['y'])
+        zoom = int(request.match_info['z'])
+        layers = request.match_info['layers']
         try:
-            self.recipe = request.match_info['recipe']
+            recipe_name = request.match_info['recipe']
         except KeyError:
-            self.recipe = Configs.server['default_recipe']
+            recipe_name = Configs.server['default_recipe']
 
-        print(self.x, self.y, self.zoom, self.layer, self.recipe)
+        # check that recipe exists
+        if recipe_name not in Configs.recipes.keys():
+            logger.error('Recipe {0} not found in recipes'.format(recipe_name))
+            return aiohttp.errors.HttpBadRequest('Recipe {0} not found in recipes'.format(recipe_name))
 
-        bounds = mercantile.bounds(self.x, self.y, self.zoom)
-        self.west, self.south = mercantile.xy(bounds.west, bounds.south)
-        self.east, self.north = mercantile.xy(bounds.east, bounds.north)
+        # fetch recipe
+        recipe = Configs.recipes[recipe_name]
 
-        if self.layer not in Configs.recipes[self.recipe].layers.values():
-            logger.error('Layer {0} not found in recipe {1}'.format(self.layer, self.recipe))
-            return aiohttp.errors.HttpBadRequest('Layer {0} not found in layer config file'.format(self.layer))
+        # extrapolate the layers
+        if layers == 'all':
+            layers = list(recipe.layers.keys())
         else:
-            self.process_layer()
-            self.post_process()
-            return self.CONTENT, 200, {"Content-Type": self.CONTENT_TYPE}
+            layers = layers.split('+')
 
-    def process_layer(self):
-        layer_data = self.query_layer()
-        self.add_layer_data(layer_data)
+        # compute bounds and extents
+        bounds = mercantile.bounds(x, y, zoom)
+        west, south = mercantile.xy(bounds.west, bounds.south)
+        east, north = mercantile.xy(bounds.east, bounds.north)
 
-    def query_layer(self):
+        # process the layers
+        layer_data = []
+        for layer_name in layers:
+            if layer_name not in recipe.layers.keys():
+                logger.error('Layer {0} not found in recipe {1}'.format(layer_name, recipe_name))
+                return aiohttp.errors.HttpBadRequest('Layer {0} not found in layer config file'.format(layer_name))
+            else:
+                layer = recipe.layers[layer_name]
+                layer_data.append(await cls.query_layer(layer, zoom, west, south, east, north))
+        return cls.post_process(layer_data)
+
+    @classmethod
+    async def query_layer(cls, layer, zoom, west, south, east, north):
         features = []
-        for query in self.layer.queries:
-            if self.zoom < query.get('minzoom', 0) \
-               or self.zoom > query.get('maxzoom', 22):
+        for query in layer.queries:
+            if zoom < query.get('minzoom', 0) \
+               or zoom > query.get('maxzoom', 22):
                 continue
-            sql = self.sql(query)
+            sql = cls.sql(query, zoom, west, south, east, north)
+            db_name = query.db_name
             try:
-                rows = DB.fetchall(sql, dbname=query.dbname)
+                features = await Configs.DB.fetchall(sql, geom_processor=cls.geom_processor, db_name=db_name)
             except (psycopg2.ProgrammingError, psycopg2.InternalError) as e:
                 msg = str(e)
                 if Configs.server['debug']:
                     msg = "{} ** Query was: {}".format(msg, sql)
                     logger.error(msg)
-            features += [self.to_feature(row, self.layer) for row in rows]
-        return self.to_layer(self.layer, features)
+        return {"name": layer['name'], "features": features}
 
-    def sql(self, query):
+    @classmethod
+    def sql(cls, query, zoom, west, south, east, north):
         srid = query.srid
         bbox = 'ST_SetSRID(ST_MakeBox2D(ST_MakePoint({west}, {south}), ST_MakePoint({east}, {north})), {srid})'  # noqa
-        bbox = bbox.format(west=self.west, south=self.south, east=self.east,
-                           north=self.north, srid=srid)
-        pixel_width = self.CIRCUM / (self.SIZE * query.scale) / 2 ** self.zoom
+        bbox = bbox.format(west=west, south=south, east=east, north=north, srid=srid)
+        pixel_width = cls.CIRCUM / (cls.SIZE * Configs.server['scale']) / 2 ** zoom
         if query.buffer:
             units = query.buffer * pixel_width
             bbox = 'ST_Expand({bbox}, {units})'.format(bbox=bbox, units=units)
-        geometry = self.geometry
+        geometry = cls.geometry(west, south, east, north)
         if query.clip:
             geometry = geometry.format(way='ST_Intersection({way}, {bbox})')
-        geometry = geometry.format(way='way', bbox=bbox)
+        geometry = geometry.format(way='way')
         sql = query['sql'].replace('!bbox!', bbox)
-        sql = sql.replace('!zoom!', str(self.zoom))
+        sql = sql.replace('!zoom!', str(zoom))
         sql = sql.replace('!pixel_width!', str(pixel_width))
-        return self.SQL_TEMPLATE.format(way=geometry, sql=sql, bbox=bbox)
+        return cls.SQL_TEMPLATE.format(way=geometry, sql=sql, bbox=bbox)
 
-    def to_layer(self, layer, features):
-        return {
-            "name": layer['name'],
-            "features": features
-        }
+    # overriden in children classes
+    @classmethod
+    def geometry(cls, west, south, east, north):
+        pass
 
-    def add_layer_data(self, data):
-        self.layer.append(data)
+    # overriden in children classes
+    @staticmethod
+    def post_process(layer_data):
+        pass
 
-    def to_feature(self, row, layer):
-        return {
-            "geometry": self.process_geometry(row['_way']),
-            "properties": self.row_to_dict(row)
-        }
-
-    def row_to_dict(self, row):
-        def f(item):
-            return not item[0].startswith('_') and item[0] != 'way'
-        return dict(i for i in row.items() if f(i))
-
-    def process_geometry(self, geometry):
-        return geometry
-
-    @property
-    def geometry(self):
-        return self.GEOMETRY
+    @staticmethod
+    def geom_processor(geometry):
+        pass
 
 
 class ServePBF(ServeTile):
 
-    endpoint = 'pbf'
-
-    SCALE = 4096
-    CONTENT_TYPE = 'application/x-protobuf'
-
-    @property
-    def geometry(self):
+    @classmethod
+    def geometry(cls, west, south, east, north):
         return ('ST_AsText(ST_TransScale(%s, %.12f, %.12f, %.12f, %.12f)) as _way'  # noqa
-                % (self.GEOMETRY, -self.west, -self.south,
-                self.SCALE / (self.east - self.west),
-                self.SCALE / (self.north - self.south)))
+                % (cls.GEOMETRY, -west, -south,
+                   4096 / (east - west),
+                   4096 / (north - south)))
 
-    def post_process(self):
-        self.CONTENT = mapbox_vector_tile.encode(self.layer)
+    @staticmethod
+    def geom_processor(geometry):
+        return geometry
+
+    @staticmethod
+    def post_process(layer_data):
+        response_content = mapbox_vector_tile.encode(layer_data)
+        return 'application/x-protobuf', response_content
 
 
 class ServeJSON(ServeTile):
 
-    endpoint = 'json'
+    @classmethod
+    def geometry(cls, west, south, east, north):
+        return "ST_AsGeoJSON(ST_Transform({way}, 4326)) as _way"  # noqa
 
-    GEOMETRY = "ST_AsGeoJSON(ST_Transform({way}, 4326)) as _way"  # noqa
-    CONTENT_TYPE = 'application/json'
-
-    def post_process(self):
-        self.CONTENT = ujson.dumps(self.layer)
-
-    def process_geometry(self, geometry):
+    @staticmethod
+    def geom_processor(geometry):
         return ujson.loads(geometry)
+
+    @staticmethod
+    def post_process(layer_data):
+        response_content = ujson.dumps(layer_data)
+        return 'application/json', response_content
 
 
 class ServeGeoJSON(ServeJSON):
 
-    endpoint = 'geojson'
-
-    def to_layer(self, layer, features):
-        return features
-
-    def add_layer_data(self, data):
-        self.layer.extend(data)
-
-    def to_feature(self, row, layer):
-        feature = super(ServeGeoJSON, self).to_feature(row, layer)
-        feature["type"] = "Feature"
-        feature['properties']['layer'] = layer['name']
-        return feature
-
-    def post_process(self):
-        self.CONTENT = ujson.dumps({
+    @staticmethod
+    def post_process(layer_data):
+        # TODO: should layers be flattened?
+        for layer in layer_data:
+            for feature in layer['features']:
+                feature['type'] = 'Feature'
+                #feature['properties']['layer'] = 'Layer_Name'  # TODO: sort out layer names
+        response_content = ujson.dumps({
             "type": "FeatureCollection",
-            "features": self.layer
+            "features": layer_data
         })
+        return 'application/json', response_content
 
 
 class TileJson():
 
     endpoint = 'tilejson'
 
-    def get(self):
-        base = Configs.server['tilejson']
+    @staticmethod
+    def get():
+        base = ujson.loads(Configs.server['tileJSON_spec'])  #TODO: figure out
         base['vector_layers'] = []
-        for recipe in RECIPES.values():
+        for recipe in Configs.recipes.values():
             for layer in recipe.layers.values():
                 base['vector_layers'].append({
                     "description": layer.description,

@@ -1,11 +1,10 @@
 import yaml
 
-
 class Configs:
 
     server = None
     recipes = {}
-    db_pool = None
+    DB = None
 
     @classmethod
     def init_server_configs(cls, server_configs):
@@ -41,6 +40,8 @@ for recipe in Configs.layers:
 Plugins.hook('load', config=config, recipes=RECIPES)
 '''
 
+# the following model structures for recipes / layers / queries allows searching up the chain
+# for attributes. If not found in the root recipes level then it will check the server configs.
 class Recipe(dict):
 
     def __init__(self, data):
@@ -53,7 +54,8 @@ class Recipe(dict):
             self.layers[layer['name']] = Layer(self, layer)
 
     def __getattr__(self, attr):
-        return self.get(attr, getattr(Configs.recipes, attr.upper(), None))
+        return self.get(attr, Configs.server.get(attr))  #forcing attribute error if not found
+
 
 class Layer(dict):
 
@@ -68,7 +70,7 @@ class Layer(dict):
             self.queries.append(Query(self, query))
 
     def __getattr__(self, attr):
-        return self.get(attr, getattr(self.recipe, attr))
+        return self.get(attr, self.recipe.get(attr))
 
     @property
     def id(self):
@@ -81,5 +83,5 @@ class Query(dict):
         self.layer = layer
         super().__init__(data)
 
-    def __getattr__(self, name):
-        return self.get(name, getattr(self.layer, name))
+    def __getattr__(self, attr):
+        return self.get(attr, self.layer.get(attr))

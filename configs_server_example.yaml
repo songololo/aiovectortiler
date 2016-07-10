@@ -1,5 +1,6 @@
 log_level: 'info'
-database_connection_string: 'dbname=my_db user=my_user password= host=localhost'
+databases:
+- default: 'dbname=my_db user=my_user password= host=localhost'
 default_recipe: 'example recipe'
 SRID: 3857
 scale: 1

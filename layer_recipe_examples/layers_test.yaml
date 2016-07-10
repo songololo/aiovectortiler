@@ -1,10 +1,26 @@
-buffer: 128
 layers:
 - name: "nyc_blocks_data"
-  clip: true
+  buffer: 0
+  clip: false
+  srid: 3857
   queries:
-    - sql: |-
-        SELECT
-          'id', 'BB', 'CS', 'NBHD_text', 'Area', 'Perim', 'Cmpt', 'BS', 'BlockArea_m', 'FSI', 'ComAR', 'ResAR', 'NumFloors', ST_Transform(geom, 3857) as way
-        FROM
-          nyc_blocks_data
+  - minzoom: 12
+    maxzoom: 22
+    sql: |
+      SELECT
+        "id",
+        "BB",
+        "CS",
+        "NBHD_text",
+        "Area",
+        "Perim",
+        "Cmpt",
+        "BS",
+        "BlockArea_m",
+        "FSI",
+        "ComAR",
+        "ResAR",
+        "NumFloors",
+        ST_Transform(geom, 3857) as way
+      FROM
+        nyc_blocks_data

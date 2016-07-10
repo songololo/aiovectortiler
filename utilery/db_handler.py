@@ -1,6 +1,6 @@
-import atexit
 import logging
 import time
+import aiopg
 import psycopg2
 import psycopg2.extras
 
@@ -15,27 +15,30 @@ class DB(object):
     _ = {}
 
     @classmethod
-    def connect(cls, dbname=None):
-        dbname = dbname or cls.DEFAULT
-        if dbname not in cls._:
-            cls._[dbname] = psycopg2.connect(Configs.server['database_connection_string'])
-        return cls._[dbname]
+    async def connect(cls, db_name, dsn_string):
+        if db_name not in cls._:
+            cls._[db_name] = await aiopg.create_pool(dsn_string)
+        # if this is the first entry and if the name is not default, create a link
+        # so doing the first db becomes the default, unless overwritten later by subsequent db pool
+        if len(cls._) == 1 and db_name != 'default':
+            cls._['default'] = cls._[db_name]
+            print(cls._.keys(), cls._.values())
 
     @classmethod
-    def fetchall(cls, query, args=None, dbname=None):
-        before = time.time()
-        cur = DB.connect(dbname).cursor(
-                                cursor_factory=psycopg2.extras.DictCursor)
-        cur.execute(query, args)
-        rv = cur.fetchall()
-        cur.close()
-        after = time.time()
-        logger.debug('%s => %s\n%s', query, (after - before) * 1000, '*' * 40)
-        return rv
+    async def fetchall(cls, query, geom_processor, db_name, args=None):
+        if not db_name:
+            db_name = 'default'
+        features = []
+        async with cls._[db_name].acquire() as db_connection:
+            async with db_connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+                await cursor.execute(query)
+                async for row in cursor:
+                    features.append({
+                        'geometry': geom_processor(row['_way']),
+                        'properties': cls.row_to_dict(row)
+                    })
+        return features
 
-
-def close_connections():
-    logger.debug('Closing DB connections')
-    for conn in DB._.values():
-        conn.close()
-atexit.register(close_connections)
+    @staticmethod
+    def row_to_dict(row):
+        return {key:value for key, value in row.items() if not key.startswith('_') and not key == 'way'}

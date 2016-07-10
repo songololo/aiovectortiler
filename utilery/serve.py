@@ -6,11 +6,15 @@ sys.path.insert(0, dir_parent)
 import sys
 import logging
 import argparse
+import asyncio
 from aiohttp import web
 
-from utilery.config_handler import Configs
 import utilery
+from utilery.config_handler import Configs
 from utilery.plugins import Plugins
+from utilery.db_handler import DB
+from utilery.tile_handler import ServePBF, ServeGeoJSON, ServeJSON, TileJson
+
 
 # parse arguments
 ARGS = argparse.ArgumentParser(description="asyncio python tile server")
@@ -31,53 +35,68 @@ ARGS.add_argument('--version', action='version', version=utilery.VERSION)
 args = ARGS.parse_args()
 
 
-# write configs
+# set the server configs
 Configs.init_server_configs(os.path.abspath(args.server_configs))
 
-for file in os.listdir(os.path.abspath(args.layer_configs)):
-    if file.endswith('.yaml') or file.endswith('.yml'):
-        Configs.init_layer_recipes(os.path.join(os.path.abspath(args.layer_configs), file))
 
 # setup logging
 logging.basicConfig(stream=sys.stdout, level=Configs.server['log_level'].upper())
 logger = logging.getLogger(__name__)
-logger.info('STARTING TILE SERVER APP')
+logger.info('STARTING ASYNCIO TILE SERVER APP')
 
+
+# set the layer configs
+for file in os.listdir(os.path.abspath(args.layer_configs)):
+    if file.endswith('.yaml') or file.endswith('.yml'):
+        logger.info('Adding layer: {0}'.format(file))
+        Configs.init_layer_recipes(os.path.join(os.path.abspath(args.layer_configs), file))
+
+
+# load plugins
+logger.info('Loading plugins')
 Plugins.load()
 
-from utilery.tile_handler import ServePBF, ServeGeoJSON, ServeJSON, TileJson
 
-
-# setup app
+# create server app
+logger.info('Creating the server app')
 app = web.Application()
 
 
 # setup url routes and corresponding handlers
 async def request_pbf(request):
-    response = ServePBF().serve(request)
-    return web.Response(body=response)
-app.router.add_route('GET', '/{layer}/{z}/{x}/{y}.pbf', request_pbf)
-app.router.add_route('GET', '/{recipe}/{layer}/{z}/{x}/{y}.pbf', request_pbf)
-app.router.add_route('GET', '/{layer}/{z}/{x}/{y}.mvt', request_pbf)
-app.router.add_route('GET', '/{recipe}/{layer}/{z}/{x}/{y}.mvt', request_pbf)
+    content_type, body = await ServePBF.serve(request)
+    return web.Response(content_type=content_type, body=body)
+app.router.add_route('GET', '/{layers}/{z}/{x}/{y}.pbf', request_pbf)
+app.router.add_route('GET', '/{recipe}/{layers}/{z}/{x}/{y}.pbf', request_pbf)
+app.router.add_route('GET', '/{layers}/{z}/{x}/{y}.mvt', request_pbf)
+app.router.add_route('GET', '/{recipe}/{layers}/{z}/{x}/{y}.mvt', request_pbf)
 
 async def request_geojson(request):
-    response = ServeGeoJSON().serve(request)
-    return web.Response(body=response)
-app.router.add_route('GET', '/{layer}/{z}/{x}/{y}.geojson', request_geojson)
-app.router.add_route('GET', '/{recipe}/{layer}/{z}/{x}/{y}.geojson', request_geojson)
+    content_type, body = await ServeGeoJSON.serve(request)
+    return web.Response(content_type=content_type, body=body.encode())
+app.router.add_route('GET', '/{layers}/{z}/{x}/{y}.geojson', request_geojson)
+app.router.add_route('GET', '/{recipe}/{layers}/{z}/{x}/{y}.geojson', request_geojson)
 
 async def request_json(request):
-    response = ServeJSON().serve(request)
-    return web.Response(body=response)
-app.router.add_route('GET', '/{layer}/{z}/{x}/{y}.json', request_json)
-app.router.add_route('GET', '/{recipe}/{layer}/{z}/{x}/{y}.json', request_json)
+    content_type, body = await ServeJSON.serve(request)
+    return web.Response(content_type=content_type, body=body.encode())
+app.router.add_route('GET', '/{layers}/{z}/{x}/{y}.json', request_json)
+app.router.add_route('GET', '/{recipe}/{layers}/{z}/{x}/{y}.json', request_json)
 
 async def request_tilejson(request):
-    response = TileJson().get()
-    return web.Response(body=response)
+    content_type, body = TileJson.get()
+    return web.Response(content_type=content_type, body=body.encode())
 app.router.add_route('GET', '/tilejson/mvt.json', request_tilejson)
-app.router.add_route('GET', '/{recipe}/tilejson/mvt.json', request_tilejson)
+
+
+# start the database pool
+logger.info('Creating the database pool')
+Configs.DB = DB() # create the DB instance
+loop = asyncio.get_event_loop()
+for db_name, dsn_string in Configs.server['databases'].items():
+    loop.run_until_complete(DB.connect(db_name, dsn_string)) # this is an awaitable async so use run_until_complete
+
 
 # start the server
+logger.info('Starting the server app')
 web.run_app(app)
