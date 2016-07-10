@@ -31,7 +31,7 @@ ARGS.add_argument('--layer_recipes_folder',
                   default='../layer_recipe_examples/',
                   help='The YAML layers configs file')
 ARGS.add_argument('--host',
-                  '-h',
+                  '-H',
                   action="store",
                   dest="host",
                   default='localhost',
