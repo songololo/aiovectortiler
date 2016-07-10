@@ -16,7 +16,7 @@ from utilery.db_handler import DB
 from utilery.tile_handler import ServePBF, ServeGeoJSON, ServeJSON, TileJson
 
 
-# parse arguments
+# parse arguments from command line
 ARGS = argparse.ArgumentParser(description="asyncio python tile server")
 ARGS.add_argument('--server_configs',
                   '-s',
