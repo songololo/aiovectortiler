@@ -24,7 +24,6 @@ setup(
     long_description=long_description,
     url=utilery.__homepage__,
     author=utilery.__author__,
-    author_email=utilery.__contact__,
     license='WTFPL',
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -37,7 +36,7 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.5',
     ],
-    keywords='openstreetmap vectortile postgis',
+    keywords='openstreetmap vectortile postgis asyncio',
     packages=find_packages(exclude=['tests']),
     install_requires=install_requires,
     extras_require={'test': ['pytest'], 'docs': 'mkdocs'},
