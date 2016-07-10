@@ -30,6 +30,12 @@ ARGS.add_argument('--layer_recipes_folder',
                   dest="layer_configs",
                   default='../layer_recipe_examples/',
                   help='The YAML layers configs file')
+ARGS.add_argument('--host',
+                  '-h',
+                  action="store",
+                  dest="host",
+                  default='localhost',
+                  help='The host address')
 ARGS.add_argument('--version', action='version', version=utilery.VERSION)
 
 args = ARGS.parse_args()
@@ -99,4 +105,4 @@ for db_name, dsn_string in Configs.server['databases'].items():
 
 # start the server
 logger.info('Starting the server app')
-web.run_app(app)
+web.run_app(app, host=args.host, port=8080)
