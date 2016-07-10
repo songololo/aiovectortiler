@@ -8,6 +8,7 @@ import logging
 import argparse
 import asyncio
 from aiohttp import web
+import aiohttp_cors
 
 import utilery
 from utilery.config_handler import Configs
@@ -64,7 +65,6 @@ Plugins.load()
 logger.info('Creating the server app')
 app = web.Application()
 
-
 # setup url routes and corresponding handlers
 async def request_pbf(request):
     content_type, body = await ServePBF.serve(request)
@@ -90,6 +90,18 @@ async def request_tilejson(request):
     content_type, body = TileJson.get()
     return web.Response(content_type=content_type, body=body.encode())
 app.router.add_route('GET', '/tilejson/mvt.json', request_tilejson)
+
+
+# configure CORS
+cors = aiohttp_cors.setup(app, defaults={
+    "*": aiohttp_cors.ResourceOptions(
+        allow_credentials=True,
+        expose_headers='*',
+        allow_headers='*'
+    )
+})
+for route in list(app.router.routes()):
+    cors.add(route)
 
 
 # start the database pool
