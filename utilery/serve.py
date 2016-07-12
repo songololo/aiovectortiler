@@ -29,11 +29,6 @@ ARGS.add_argument('--layer_recipes',
                   dest="layer_configs",
                   default='../layer_recipe_examples/',
                   help='The YAML layers configs file')
-ARGS.add_argument('--host',
-                  action="store",
-                  dest="host",
-                  default='localhost',
-                  help='The host address')
 ARGS.add_argument('--version', action='version', version=utilery.VERSION)
 
 args = ARGS.parse_args()
