@@ -26,7 +26,7 @@ ARGS.add_argument('--server_configs',
                   help='The YAML database config file')
 ARGS.add_argument('--layer_recipes',
                   action="store",
-                  dest="layer_configs",
+                  dest="layer_recipes",
                   default='../layer_recipe_examples/',
                   help='The YAML layers configs file')
 ARGS.add_argument('--version', action='version', version=utilery.VERSION)
@@ -45,7 +45,7 @@ logger.info('STARTING ASYNCIO TILE SERVER APP')
 
 
 # set the layer configs
-for file in os.listdir(os.path.abspath(args.layer_configs)):
+for file in os.listdir(os.path.abspath(args.layer_recipes)):
     if file.endswith('.yaml') or file.endswith('.yml'):
         logger.info('Adding layer: {0}'.format(file))
         Configs.init_layer_recipes(os.path.join(os.path.abspath(args.layer_configs), file))
