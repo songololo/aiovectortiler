@@ -48,7 +48,7 @@ logger.info('STARTING ASYNCIO TILE SERVER APP')
 for file in os.listdir(os.path.abspath(args.layer_recipes)):
     if file.endswith('.yaml') or file.endswith('.yml'):
         logger.info('Adding layer: {0}'.format(file))
-        Configs.init_layer_recipes(os.path.join(os.path.abspath(args.layer_configs), file))
+        Configs.init_layer_recipes(os.path.join(os.path.abspath(args.layer_recipes), file))
 
 
 # load plugins
