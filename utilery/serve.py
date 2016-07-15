@@ -38,6 +38,7 @@ ARGS.add_argument('--port',
                   action="store",
                   dest="port",
                   default=8080,
+                  type=int,
                   help='The host port')
 ARGS.add_argument('--version', action='version', version=utilery.VERSION)
 
