@@ -120,4 +120,4 @@ for db_name, dsn_string in Configs.server['databases'].items():
 
 # start the server
 logger.info('Starting the server app')
-web.run_app(app, host=args.host, port=int(args.port))
+web.run_app(app, host=args.host, port=args.port)
