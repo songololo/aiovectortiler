@@ -22,7 +22,7 @@ class DB(object):
         # so doing the first db becomes the default, unless overwritten later by subsequent db pool
         if len(cls._) == 1 and db_name != 'default':
             cls._['default'] = cls._[db_name]
-            print(cls._.keys(), cls._.values())
+        logger.info('database keys: {0}'.format(cls._.keys()))
 
     @classmethod
     async def fetchall(cls, query, geom_processor, db_name, args=None):
