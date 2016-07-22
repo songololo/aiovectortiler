@@ -112,12 +112,12 @@ for route in list(app.router.routes()):
 
 # start the database pool
 logger.info('Creating the database pool')
-Configs.DB = DB() # create the DB instance
+Configs.DB = DB()  # create the DB instance
 loop = asyncio.get_event_loop()
 for db_name, dsn_string in Configs.server['databases'].items():
     loop.run_until_complete(DB.connect(db_name, dsn_string)) # this is an awaitable async so use run_until_complete
 
 
 # start the server
-logger.info('Starting the server app')
+logger.info('Starting the server app at host: {0}, port: {1}'.format(args.host, args.port))
 web.run_app(app, host=args.host, port=args.port)
