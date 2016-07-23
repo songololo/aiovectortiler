@@ -8,6 +8,3 @@ It is easy to configure by means of SQL requests provided in YAML recipe files.
 
 An example of a recipe to use with OpenStreetMap data:
 [https://github.com/etalab/utilery-osm-recipe/blob/master/utilery.yml](https://github.com/etalab/utilery-osm-recipe/blob/master/utilery.yml)
-
-- [Installation](install.md)
-- [Configuration](config.md)
