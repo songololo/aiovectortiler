@@ -1,42 +1,26 @@
 # Installing Utilery
 
-Warning: Utilery is not yet released as python package,
-because some Python dependencies are not released yet in pypi.
+## Compatibility and Requirements
 
-## System dependencies
+Due to the use of Python's asyncio, Python 3.5 is an absolute requirement.
 
-- PostgreSQL
-- PostGIS
-- python3.4
-- git (for installation)
+You'll also need a running PostGIS database with your data.
 
-## Install using a virtualenv
+## Installation from PyPI
 
-1. Install [PostgreSQL](https://wiki.postgresql.org/wiki/Detailed_installation_guides)
+pip install aiovectortiler
 
-1. Install dependencies:
+## Installation from source
 
-        sudo apt-get install python3.4 python3.4-dev python-pip python-virtualenv virtualenvwrapper git
+1. Clone aiovectortiler:
 
-1. Create a virtualenv:
+        git clone https://github.com/shongololo/aiovectortiler.git
 
-        mkvirtualenv utilery --python=/usr/bin/python3.4
+2. Install:
 
-1. Clone Utilery:
-
-        git clone https://github.com/etalab/utilery
-
-1. Install python package:
-
-        cd utilery
+        cd aiovectortiler
         pip install .
 
-1. Install unstable python dependencies:
+## Next steps
 
-        pip install -r requirements.txt
-
-
-
-
-## What to do next?
-Now you certainly want to [configure Utilery](config.md).
+Setup your server and layer [configurations](config.md).

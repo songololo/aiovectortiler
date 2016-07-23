@@ -8,7 +8,7 @@ aiovectortiler can serve vector tiles in [geojson](http://geojson.org) and [Mapb
 
 It is easy to configure by means of SQL requests provided in YAML recipe files.
 
-Here is an example of a recipe to use with OpenStreetMap data:
+An example of a recipe to use with OpenStreetMap data:
 
 [https://github.com/etalab/utilery-osm-recipe/blob/master/utilery.yml](https://github.com/etalab/utilery-osm-recipe/blob/master/utilery.yml)
 
