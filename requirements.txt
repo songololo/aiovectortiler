@@ -1,7 +1,7 @@
 PyYAML
 mapbox-vector-tile
 mercantile
-protobuf>=3.0.0b3
+protobuf>=3.0.0b4
 psycopg2
 aiopg
 aiohttp
@@ -9,4 +9,3 @@ aiohttp_cors
 ujson
 cchardet
 argparse
-

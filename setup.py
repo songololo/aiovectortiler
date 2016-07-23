@@ -18,7 +18,7 @@ with open('requirements.txt', encoding='utf-8') as reqs:
     install_requires = [l for l in reqs.read().split('\n') if is_pkg(l)]
 
 setup(
-    name='utilery',
+    name='aio',
     version=utilery.__version__,
     description=utilery.__doc__,
     long_description=long_description,
