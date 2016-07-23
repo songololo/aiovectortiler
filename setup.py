@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 from codecs import open  # To use a consistent encoding
 from os import path
 
-import utilery
+import aiovectortiler
 
 here = path.abspath(path.dirname(__file__))
 
@@ -18,22 +18,21 @@ with open('requirements.txt', encoding='utf-8') as reqs:
     install_requires = [l for l in reqs.read().split('\n') if is_pkg(l)]
 
 setup(
-    name='aio',
-    version=utilery.__version__,
-    description=utilery.__doc__,
+    name='aiovectortiler',
+    version=aiovectortiler.__version__,
+    description=aiovectortiler.__doc__,
     long_description=long_description,
-    url=utilery.__homepage__,
-    author=utilery.__author__,
-    license='WTFPL',
+    url=aiovectortiler.__homepage__,
+    author=aiovectortiler.__author__,
+    license='MIT',
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
-        'Development Status :: 3 - Beta',
+        'Development Status :: 4 - Beta',
 
         'Intended Audience :: Developers',
         'Topic :: Scientific/Engineering :: GIS',
 
-        'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.5',
     ],
     keywords='openstreetmap vectortile postgis asyncio',

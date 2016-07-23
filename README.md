@@ -3,6 +3,6 @@
 
 # utilery
 
-Micro vector tile manufacturing from PostGIS.
+Asynchronous micro vector tile creation from PostGIS.
 
 Documentation: http://utilery.readthedocs.org/

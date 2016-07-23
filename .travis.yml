@@ -1,6 +1,6 @@
 language: python
 python:
-- '3.4'
+- '3.5'
 before_install:
   # Needed for shapely
   - sudo add-apt-repository -y ppa:ubuntugis/ppa

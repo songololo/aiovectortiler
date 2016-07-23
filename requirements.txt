@@ -8,4 +8,3 @@ aiohttp
 aiohttp_cors
 ujson
 cchardet
-argparse
