@@ -2,10 +2,10 @@ databases:
 - default: 'dbname=my_db user=my_user password= host=localhost'
 default_recipe: 'example recipe'
 log_level: 'info'
-SRID: 3857
-scale: 1
-buffer: 0
-clip: False
+SRID: 3857  # optional global parameter
+scale: 1  # optional global parameter
+buffer: 0  # optional global parameter
+clip: False  # optional global parameter
 CORS: '*'
 
 builtin_plugins: []
