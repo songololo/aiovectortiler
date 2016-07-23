@@ -31,25 +31,25 @@ At least one database connection must be provided. Use the `default` key for you
 
 The DSN strings are per the [LibPQ connection string format](http://www.postgresql.org/docs/current/static/libpq-connect.html#LIBPQ-CONNSTRING)
 
-#### default_recipe - *required*
+#### default_recipe - *optional*
 
-The name for your primary (or only) recipe file, without the extension. This recipe file will be used when no recipe is defined in the endpoint request.
+If a default recipe is not provided, then the app will set the only, or if more than one, the first layer as the 'default' layer. When a URL request is made without a request for a specific layer, then the default layer will be used. If you have more than one layer, then by setting this key you can determine which of the layers is the 'default' layer.
 
     default_recipe: my_default_recipe_name
 
-#### log_level - *required*
+#### log_level - *optional*
 
 The preferred log level based on standard python logging levels, e.g. debug, info, warning, error, critical.
  
     log_level: info
 
-#### SRID - *required*
+#### SRID - *optional*
 
 The SRID system for the tile system. This should ordinarily be 3857.
  
     SRID: 3857
 
-#### CORS - *required*
+#### CORS - *optional*
 
 Domains for permitted CORS requests. Set this to * to permit all cross origin requests. This is useful for development.
  
@@ -60,9 +60,9 @@ Domains for permitted CORS requests. Set this to * to permit all cross origin re
     builtin_plugins:
     - 'aiovectortiler.plugins.builtins.plugin_name'
 
-A list of built-in [plugins](plugins.md) to activate.
+A list of built-in [plugins](plugins.md) to optionally activate.
 
-#### lugins (list)
+#### plugins (list)
 
     plugins:
     - /path/to/plugin
@@ -87,7 +87,7 @@ Default dict to use when serving the `/tilejson/` endpoint.
 
 #### A note on global layer keys
 
-The `scale`, `buffer`, `clip`, and `SRID` keys can be set in individual recipe, layer, or query levels. They can also be set at the server config file level as a global fallback default value for all recipes, layers.
+The `scale`, `buffer`, `clip`, and `SRID` keys can be set in the [recipe configuration file's](#recipes) recipe, layer, or query levels. However, these can be omitted where preferred and a global default value can be provided in the server config file. This global value will only apply in cases where these keys have not been provided at the local recipe, layer, or query level.
 
 
 ## Recipes
@@ -96,8 +96,7 @@ Each recipe is a single YAML file.
 
 ### **Inheritable keys**
 
-These keys can be set at the first level of the YAML file, at the layer level, or at the query level.
-These keys can also be defined in the server configs file for global defaults across all recipes.
+These keys can be set at the first level of the YAML file, at the layer level, or at the query level. These keys can also be defined in the server configs file for global defaults. However, these global defaults will only be used in the event that the keys are not provided at the local recipe level.
 
 ##### buffer (integer) — *optional* — default: 0
 Optional buffer (in pixels) to use when querying data.

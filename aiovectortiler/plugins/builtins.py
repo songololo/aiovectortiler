@@ -1,4 +1,7 @@
+import logging
 from aiovectortiler.config_handler import Configs
+
+logger = logging.getLogger(__name__)
 
 '''
 # template plugin:

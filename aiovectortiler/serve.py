@@ -37,15 +37,32 @@ def serve_tiles(server_configs, layer_recipes, host='0.0.0.0', port='8080'):
     Configs.init_server_configs(os.path.abspath(server_configs))
 
     # setup logging
-    logging.basicConfig(stream=sys.stdout, level=Configs.server['log_level'].upper())
+    try:
+        log_level = Configs.server['log_level'].upper()
+    except KeyError:
+        log_level = 'INFO'
+    logging.basicConfig(stream=sys.stdout, level=log_level)
     logger = logging.getLogger(__name__)
     logger.info('STARTING ASYNCIO TILE SERVER APP')
 
     # set the layer configs
     for file in os.listdir(os.path.abspath(layer_recipes)):
         if file.endswith('.yaml') or file.endswith('.yml'):
-            logger.info('Adding layer: {0}'.format(file))
             Configs.init_layer_recipes(os.path.join(os.path.abspath(layer_recipes), file))
+    # check if a default recipe has been set in server configs. If so, set:
+    try:
+        default_recipe = Configs.server['default_recipe']
+        if default_recipe[-4:] == '.yml':
+            default_recipe = default_recipe[:-4]
+        elif default_recipe[-5:] == '.yaml':
+            default_recipe = default_recipe[:-5]
+        Configs.recipes['default_recipe'] = Configs.recipes[default_recipe]
+        logger.info('Default recipe set to: {0}'.format(default_recipe))
+    except KeyError:
+        logger.info('No default recipe set, using the first or only layer as default.')
+        for first_key in Configs.recipes:
+            Configs.recipes['default_recipe'] = Configs.recipes[first_key]
+            break
 
     # load plugins
     logger.info('Loading plugins')
@@ -83,12 +100,18 @@ def serve_tiles(server_configs, layer_recipes, host='0.0.0.0', port='8080'):
     app.router.add_route('GET', '/tilejson/mvt.json', request_tilejson)
 
 
-    # configure CORS TODO: look at how this interacts with plugin?
+    # configure CORS
+    try:
+        cors_config = Configs.server['CORS']
+        logger.warning('CORS set to {0}'.format(cors_config))
+    except KeyError:
+        cors_config = '*'
+        logger.warning('No CORS setting provided in server config file. Setting CORS to "*"')
     cors = aiohttp_cors.setup(app, defaults={
-        Configs.server['CORS']: aiohttp_cors.ResourceOptions(
+        cors_config: aiohttp_cors.ResourceOptions(
             allow_credentials=True,
-            expose_headers='*',
-            allow_headers='*'
+            expose_headers=cors_config,
+            allow_headers=cors_config
         )
     })
     for route in list(app.router.routes()):
@@ -124,12 +147,12 @@ if __name__ == '__main__':
     ARGS.add_argument('--host',
                       action="store",
                       dest="host",
-                      default='',
+                      default='0.0.0.0',
                       help='The host IP address')
     ARGS.add_argument('--port',
                       action="store",
                       dest="port",
-                      default='',
+                      default='8080',
                       help='The host port')
     ARGS.add_argument('--version', action='version', version=aiovectortiler.VERSION)
 

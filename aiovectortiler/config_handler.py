@@ -1,4 +1,7 @@
 import yaml
+import logging
+
+logger = logging.getLogger(__name__)
 
 class Configs:
 
@@ -14,14 +17,17 @@ class Configs:
 
     @classmethod
     def init_layer_recipes(cls, recipe_configs):
+        recipe_name = recipe_configs.split('/')[-1]
+        if recipe_name[-4:] == '.yml':
+            recipe_name = recipe_name[:-4]
+        elif recipe_name[-5:] == '.yaml':
+            recipe_name = recipe_name[:-5]
+        else:
+            raise ValueError('File in layer recipes folder does not have a YAML extension: {0}'.format(recipe_configs))
         with open(recipe_configs) as r_c:
             recipe = yaml.load(r_c.read())
-            name = recipe_configs.split('/')[-1]
-            if name[-4:] == '.yml':
-                name = name[:-4]
-            elif name[-5:] == '.yaml':
-                name = name[:-5]
-            cls.recipes[name] = Recipe(recipe)
+            cls.recipes[recipe_name] = Recipe(recipe)
+            logger.info('Adding layer: {0}'.format(recipe_name))
 
 
 '''
@@ -60,7 +66,7 @@ class Recipe(dict):
             self.layers[layer['name']] = Layer(self, layer)
 
     def __getattr__(self, attr):
-        return self.get(attr, Configs.server.get(attr))
+        return self.get(attr, Configs.server.get(attr, None))
 
 
 class Layer(dict):
@@ -76,7 +82,7 @@ class Layer(dict):
             self.queries.append(Query(self, query))
 
     def __getattr__(self, attr):
-        return self.get(attr, self.recipe.get(attr))
+        return self.get(attr, getattr(self.recipe, attr))
 
     @property
     def id(self):
@@ -90,4 +96,4 @@ class Query(dict):
         super().__init__(data)
 
     def __getattr__(self, attr):
-        return self.get(attr, self.layer.get(attr))
+        return self.get(attr, getattr(self.layer, attr))

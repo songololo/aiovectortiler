@@ -34,7 +34,7 @@ class ServeTile():
         try:
             recipe_name = request.match_info['recipe']
         except KeyError:
-            recipe_name = Configs.server['default_recipe']
+            recipe_name = 'default_recipe'
 
         # check that recipe exists
         if recipe_name not in Configs.recipes.keys():

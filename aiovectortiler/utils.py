@@ -1,5 +1,7 @@
+import logging
 from importlib import import_module
 
+logger = logging.getLogger(__name__)
 
 def import_by_path(path):
     """
