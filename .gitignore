@@ -118,9 +118,3 @@ ENV/
 
 # Rope project settings
 .ropeproject
-
-.gitignore
-.idea/.name
-.idea/aiovectortiler.iml
-.idea/inspectionProfiles/
-.idea/modules.xml
