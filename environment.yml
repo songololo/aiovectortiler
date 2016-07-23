@@ -1,5 +1,7 @@
 name: py35
 dependencies:
+- python=3.5.1=0
+- pip=8.1.2=py35_0
 - PyYAML
 - psycopg2
 - ujson
