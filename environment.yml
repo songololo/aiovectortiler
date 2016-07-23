@@ -1,0 +1,13 @@
+name: py35
+dependencies:
+- PyYAML
+- psycopg2
+- ujson
+- pip:
+  - protobuf>=3.0.0b4
+  - mapbox-vector-tile
+  - mercantile
+  - aiopg
+  - aiohttp
+  - aiohttp_cors
+  - cchardet
