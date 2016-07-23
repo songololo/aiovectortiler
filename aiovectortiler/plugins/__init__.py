@@ -1,5 +1,4 @@
-from utilery.utils import import_by_path
-from utilery.config_handler import Configs
+from aiovectortiler.utils import import_by_path
 
 class Plugins(object):
 
@@ -7,8 +6,8 @@ class Plugins(object):
     _hooks = {}
 
     @classmethod
-    def load(cls):
-        for path in Configs.server['builtin_plugins'] + Configs.server['plugins']:
+    def load(cls, server_configs):
+        for path in server_configs['builtin_plugins'] + server_configs['plugins']:
             cls.register_plugin(import_by_path(path)())
 
     @classmethod

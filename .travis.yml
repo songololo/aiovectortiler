@@ -2,11 +2,10 @@ language: python
 python:
 - '3.5'
 before_install:
-  # Needed for shapely
-  - sudo add-apt-repository -y ppa:ubuntugis/ppa
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq libgeos-dev python-numpy
-  - pip install --install-option="--no-cython-compile" cython
+- sudo add-apt-repository -y ppa:ubuntugis/ppa
+- sudo apt-get update -qq
+- sudo apt-get install -qq libgeos-dev python-numpy
+- pip install --install-option="--no-cython-compile" cython
 install:
 - pip install -r requirements.txt
 - pip install -r requirements-dev.txt
@@ -23,8 +22,10 @@ notifications:
   email: false
 deploy:
   provider: pypi
-  user: ybon
+  user: shongololo
   password:
-    secure: VktWHqVC+63JpFSJUGvuyQjVIPb3ocaRAejYSAxwwIkPKdMiFXd0Wv6IIq7PMqJzkMWtHPU/nSJMfzuoTA5Dxl556/jt1gFTD0NfKRsxlThcosZU/8kJ7SHRkjKPWwATySCAU8owHtuXbcmRCpB/9sImE3AKQpHh/J+BvByB1J8=
+    secure: fC4+/TNpsHIhviVQ18SryJ12qVeJj/FrcVOvbdhx+YZvXnYRXm6uLnSii3zsr8PYqYmVBZpiBvxsTR0X+OaGDVh0U/v58lDvcfVhJC72A5TjugcBUPjoC9e01lqJH8wKk53WgPeQY4ansED/+ydICfRFz9CqtwrgR1EujjnDgjCDi4PqdaupU1PdAfIvXDKVBAWFBfYIkxoGIUfd9d3nC8c7RpLaM/qwhKwO8KA0uxMPz0f2ZhE/sjwBoupLPchB1w7ZQ3SfKIjo2/AJ+BZTviq+K/4NhdehAvqLPlEkdPZ7Jr9jfWR6wP8HwL3/t9DAPGJI7UjNoxSBQEjUlz75F8sqQMEQB7O/iXHHhUOvsSG6D+XgAcS4FbkpgiVptKXhjf3nrnU50eMFsruDLgC4plZdl6NbEhwXi88HqeDNIU/iN0Ap6gQM3hnGB8zRTBaZ3hNe/KhnssZir4tWg1I5I7w1sRe8mM4wdDIYeGEW/lC2Ifw1asZJR2mADlS652YdbLD5taHz1TOCPMjYPqFWJSpTVt92Sz75cLtAiUEuiuRay+CbyB/hbxXzR37nnFmueyuYG9c4a7/YO+0LfL32Fq0by3Y7Oh7jzDBRNaXqK2WdelukVnQ8hSmxbWsf85+2RoHGGr3bUfZmvngUAxm0hXRU/aMbfnaoXCsg1qtlZ0s=
   on:
     tags: true
+    distributions: sdist bdist_wheel
+    repo: shongololo/aiovectortiler

@@ -1,22 +1,20 @@
-log_level: 'info'
 databases:
 - default: 'dbname=my_db user=my_user password= host=localhost'
 default_recipe: 'example recipe'
+log_level: 'info'
 SRID: 3857
 scale: 1
 buffer: 0
 clip: False
 CORS: '*'
 
-builtin_plugins:
-- utilery.plugins.builtins.CORS
-
+builtin_plugins: []
 plugins: []
 
 tileJSON_spec: >
   {tilejson: '2.1.0',
-  name: 'utilery',
-  description: 'A lite vector tile server',
+  name: 'aiovectortiler',
+  description: 'Asynchronous micro vector tile server for PostGIS.',
   scheme: 'xyz',
   format: 'pbf',
   tiles: [

@@ -1,13 +1,9 @@
 import logging
-import time
 import aiopg
 import psycopg2
 import psycopg2.extras
 
 logger = logging.getLogger(__name__)
-
-from utilery.config_handler import Configs
-
 
 class DB(object):
 

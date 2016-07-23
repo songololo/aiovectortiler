@@ -6,9 +6,7 @@ import psycopg2
 import logging
 
 import aiohttp.errors
-from utilery.config_handler import Configs
-
-from utilery.db_handler import DB
+from aiovectortiler.config_handler import Configs
 
 logger = logging.getLogger(__name__)
 
@@ -66,6 +64,7 @@ class ServeTile():
             else:
                 layer = recipe.layers[layer_name]
                 layer_data.append(await cls.query_layer(layer, zoom, west, south, east, north))
+        #TODO: reimplement plugins
         return cls.post_process(layer_data)
 
     @classmethod
@@ -88,9 +87,9 @@ class ServeTile():
 
     @classmethod
     def sql(cls, query, zoom, west, south, east, north):
-        srid = query.srid
-        bbox = 'ST_SetSRID(ST_MakeBox2D(ST_MakePoint({west}, {south}), ST_MakePoint({east}, {north})), {srid})'  # noqa
-        bbox = bbox.format(west=west, south=south, east=east, north=north, srid=srid)
+        bbox = 'ST_SetSRID(ST_MakeBox2D(ST_MakePoint({west}, {south}), ST_MakePoint({east}, {north})), {SRID})'  # noqa
+        SRID = query.SRID
+        bbox = bbox.format(west=west, south=south, east=east, north=north, SRID=SRID)
         pixel_width = cls.CIRCUM / (cls.SIZE * Configs.server['scale']) / 2 ** zoom
         if query.buffer:
             units = query.buffer * pixel_width

@@ -5,6 +5,7 @@ class Configs:
     server = None
     recipes = {}
     DB = None
+    plugins = None
 
     @classmethod
     def init_server_configs(cls, server_configs):
@@ -16,7 +17,12 @@ class Configs:
         with open(recipe_configs) as r_c:
             recipe = yaml.load(r_c.read())
             name = recipe_configs.split('/')[-1]
+            if name[-4:] == '.yml':
+                name = name[:-4]
+            elif name[-5:] == '.yaml':
+                name = name[:-5]
             cls.recipes[name] = Recipe(recipe)
+
 
 '''
 Plugins.load()
@@ -54,7 +60,7 @@ class Recipe(dict):
             self.layers[layer['name']] = Layer(self, layer)
 
     def __getattr__(self, attr):
-        return self.get(attr, Configs.server.get(attr))  #forcing attribute error if not found
+        return self.get(attr, Configs.server.get(attr))
 
 
 class Layer(dict):

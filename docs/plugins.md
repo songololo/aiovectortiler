@@ -1,6 +1,6 @@
 # Plugins
 
-Utilery comes with a very lite plugin system.
+aiovectortiler comes with a very lite plugin system.
 
 A plugin is a python class that implements one or more [hooks](#hooks). Here is
 a very basic example:

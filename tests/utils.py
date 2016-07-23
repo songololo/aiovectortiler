@@ -1,5 +1,5 @@
-import json
+import ujson
 
 
 def copy(d):
-    return json.loads(json.dumps(d))
+    return ujson.loads(ujson.dumps(d))
