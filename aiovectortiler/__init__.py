@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"Asynchronous micro vector tile creation from PostGIS."
+"Asynchronous micro vector tiler serving data from PostGIS."
 
 VERSION = (0, 0, 1)
 

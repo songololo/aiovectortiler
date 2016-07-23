@@ -1,7 +1,7 @@
-site_name: Utilery
+site_name: aiovectortiler
 theme: readthedocs
-repo_url: https://github.com/etalab/utilery
-site_description: Micro vector tile manufacturing from PostGIS.
+repo_url: https://github.com/shongololo/aiovectortiler.git
+site_description: Asynchronous micro vector tiler serving data from PostGIS.
 pages:
 - [index.md, Home]
 - [install.md, Installation]

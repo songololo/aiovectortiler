@@ -175,7 +175,7 @@ class TileJson():
 
     @staticmethod
     def get():
-        base = ujson.loads(Configs.server['tileJSON_spec'])  #TODO: figure out
+        base = ujson.loads(Configs.server['tileJSON_spec'])
         base['vector_layers'] = []
         for recipe in Configs.recipes.values():
             for layer in recipe.layers.values():

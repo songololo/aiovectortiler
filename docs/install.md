@@ -28,7 +28,8 @@ You'll also need access to a running PostGIS database which hosts your data.
 
 `pip install aiovectortiler`
 
-2. Create a python file containing your server config and recipes folder path, which can then be run directly:  
+2. Example python file containing your server config and recipes folder path, which can then be run directly:  
+
 ```
 from aiovectortiler.serve import serve_tiles
 
