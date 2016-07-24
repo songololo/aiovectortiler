@@ -1,5 +1,6 @@
 layers:
 - name: "my_simple_layer"
+  description: "simple layer description"
   buffer: 0
   clip: false
   SRID: 3857
