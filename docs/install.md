@@ -33,7 +33,9 @@ pip install .
 
 You can now run the aiovectortiler server from the command line:
 ```
-python aiovectortiler/serve.py --server_configs=/path/to/server_config.yaml --layer_recipes=/path/to/recipes_folder/
+python aiovectortiler/serve.py \
+    --server_configs=/path/to/server_config.yaml \
+    --layer_recipes=/path/to/recipes_folder/
 ```
 
 ## Installation from PyPI
