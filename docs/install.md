@@ -8,21 +8,38 @@ You'll also need access to a running PostGIS database which hosts your data.
 
 ## Installation from source
 
+First make sure that your context has `python 3.5`, `pip`, `git`, `psycopg2` and `shapely` installed.
+
+For example, on Ubuntu 16.04:
+```
+apt-get update \
+    && apt-get install -y git build-essential python3 python3-pip python3-psycopg2 python3-shapely \
+    && pip3 install pip --upgrade
+```
+On Mac, the conda python package manager is recommended as an easy manner for installing these packages.
+
+Once these packages are available in your environment, proceed with:
 ```
 git clone https://github.com/shongololo/aiovectortiler.git
 cd aiovectortiler
 pip install .
+```
 
+You can now run the aiovectortiler server from the command line:
+```
 python aiovectortiler/serve.py --server_configs=/path/to/server_config.yaml --layer_recipes=/path/to/recipes_folder/
 ```
 
 ## Installation from PyPI
 
+Installation from `pip` can fail if `shapely` and `psycopg2` aren't already installed. It is therefore recommended to install these first. 
+
+Then run:
 ```
 pip install aiovectortiler
 ```
 
-An `example_aiovectortiler_script.py` can be used to invoke the server as follows:
+You can then use an `example_aiovectortiler_script.py` to invoke the server as follows:
 ```
 from aiovectortiler.serve import serve_tiles
 
