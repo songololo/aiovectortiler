@@ -10,7 +10,7 @@ You'll also need access to a running PostGIS database which hosts your data.
 ## Installation from source
 
 First make sure that your context has `python 3.5`, `pip`, `git`, `psycopg2`, `shapely`, and `protobuf` installed.
-If not, then the installation of the python requirements via `pip install` is likely to fail.
+If not, then the installation of the python requirements via `pip install .` is likely to fail.
 
 For example, on Ubuntu:
 ```
@@ -19,12 +19,8 @@ sudo add-apt-repository -y ppa:fkrull/deadsnakes
 
 # Install the packages
 sudo apt-get update \
-    && sudo apt-get install -y git build-essential python3 python3-pip python3-psycopg2 python3-shapely \
+    && sudo apt-get install -y git build-essential python3 python3-pip python3-psycopg2 python3-shapely protobuf-compiler\
     && pip3 install pip --upgrade
-
-# On earlier versions of Ubuntu you will also need to install the protobuf library
-sudo apt-get install -y protobuf-compiler
-
 ```
 On a Mac, the conda python package manager is recommended as an easy manner for installing these packages.
 
@@ -34,25 +30,24 @@ Once these packages are available in your environment, proceed with:
 ```
 git clone https://github.com/shongololo/aiovectortiler.git
 cd aiovectortiler
-pip install .
-
-# you can now run the app from the command line:
+pip install .  # Note the trailing period
+```
+You can now run the app from the command line:
 python /path/to/aiovectortiler/aiovectortiler/serve.py \
     --server_configs=/path/to/server_config.yaml \
     --layer_recipes=/path/to/recipes_folder/
-```
 
 ## Installation from PyPI
 
 As with installing from source, installation from PyPI can fail if `shapely` and `psycopg2` aren't already installed.
 Follow the above instructions for installing these in your environment. 
 
-Then install aiovectortiler via pip: 
+You can then proceed to install aiovectortiler via pip: 
 ```
 pip install aiovectortiler
 ```
 
-Once installed as a module, you can use an `example_aiovectortiler_script.py` to wrap the server in your code environment:
+Once installed as a module, you can use a python script to wrap the server in your own code context:
 ```
 from aiovectortiler.serve import serve_tiles
 
@@ -63,7 +58,7 @@ port = '8080'  # this parameter is optional if req'd for overriding the default 
 
 serve_tiles(server_configs, layer_recipes, host, port)
 
-# this would run from the command line as: python /path/to/example_python_script.py
+# this would run from the command line per: python /path/to/example_python_script.py
 ```
 
 ## Installation using docker
