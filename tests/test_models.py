@@ -1,4 +1,4 @@
-from utilery.models import Recipe, Layer, Query
+from aiovectortiler.config_handler import Recipe, Layer, Query
 
 
 def test_basic_recipe():

@@ -1,6 +1,6 @@
-import json
+import ujson
 
-from utilery.models import Layer, Recipe
+from aiovectortiler.config_handler import Layer, Recipe
 from .utils import copy
 
 
@@ -148,7 +148,7 @@ def test_tilejson(client, config):
     config.TILEJSON['name'] = "testname"
     resp = client.get('/tilejson/mvt.json')
     assert resp.status_code == 200
-    data = json.loads(resp.data.decode())
+    data = ujson.loads(resp.data.decode())
     assert data['name'] == "testname"
     assert "vector_layers" in data
     assert data['vector_layers'][0]['id'] == 'default:mylayer'

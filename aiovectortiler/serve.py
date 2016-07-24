@@ -12,7 +12,7 @@ import aiohttp_cors
 
 import aiovectortiler
 from aiovectortiler.config_handler import Configs
-from aiovectortiler.plugins import Plugins
+from aiovectortiler.plugin_handler import Plugins
 from aiovectortiler.db_handler import DB
 from aiovectortiler.tile_handler import ServePBF, ServeGeoJSON, ServeJSON, TileJson
 

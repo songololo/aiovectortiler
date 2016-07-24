@@ -1,4 +1,4 @@
-from werkzeug.wrappers import Response
+from aiohttp.web import Response
 
 
 def test_on_before_load(config):
