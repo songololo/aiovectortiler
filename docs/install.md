@@ -9,22 +9,27 @@ You'll also need access to a running PostGIS database which hosts your data.
 ## Installation from source
 
 1. Clone aiovectortiler:
-`git clone https://github.com/shongololo/aiovectortiler.git`
+```
+git clone https://github.com/shongololo/aiovectortiler.git
+```
 
 2. Install:
+```
+cd aiovectortiler
+pip install .
+```
 
-`cd aiovectortiler`
-`pip install .`
-        
 3. Run from the command line:
-
-`python aiovectortiler/serve.py --server_configs=/path/to/server_config.yaml --layer_recipes=/path/to/recipes_folder/`
+```
+python aiovectortiler/serve.py --server_configs=/path/to/server_config.yaml --layer_recipes=/path/to/recipes_folder/
+```
 
 ## Installation from PyPI
 
 1. Install using pip
-
-`pip install aiovectortiler`
+```
+pip install aiovectortiler
+```
 
 2. Example python file containing your server config and recipes folder path, which can then be run directly:
 
@@ -42,8 +47,9 @@ serve_tiles(server_configs, layer_recipes, host, port)
 ## Installation using docker
 
 1. Pull the docker image
-
-`docker pull shongololo:aiovectortiler`
+```
+docker pull shongololo:aiovectortiler
+```
 
 2. Run the docker image, passing-in environment variables for your server config and recipes folder, and map the container port to the preferred host port.
 ```
