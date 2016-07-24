@@ -1,5 +1,5 @@
 layers:
-- name: "nyc_blocks_data"
+- name: "my_simple_layer"
   buffer: 0
   clip: false
   SRID: 3857
@@ -11,4 +11,4 @@ layers:
         "id",
         ST_Transform(geom, 3857) as way
       FROM
-        nyc_blocks_data
+        my_simple_layer
