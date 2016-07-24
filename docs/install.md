@@ -18,8 +18,8 @@ For example, on Ubuntu:
 sudo add-apt-repository -y ppa:fkrull/deadsnakes
 
 # Install the packages
-apt-get update \
-    && apt-get install -y git build-essential python3 python3-pip python3-psycopg2 python3-shapely \
+sudo apt-get update \
+    && sudo apt-get install -y git build-essential python3 python3-pip python3-psycopg2 python3-shapely \
     && pip3 install pip --upgrade
 ```
 On a Mac, the conda python package manager is recommended as an easy manner for installing these packages.
@@ -31,18 +31,16 @@ Once these packages are available in your environment, proceed with:
 git clone https://github.com/shongololo/aiovectortiler.git
 cd aiovectortiler
 pip install .
-```
 
-You can now run the aiovectortiler server from the command line:
-```
-python aiovectortiler/serve.py \
+# you can now run the app from the command line:
+python /path/to/aiovectortiler/aiovectortiler/serve.py \
     --server_configs=/path/to/server_config.yaml \
     --layer_recipes=/path/to/recipes_folder/
 ```
 
 ## Installation from PyPI
 
-As with installing from source, installation from `pip` can fail if `shapely` and `psycopg2` aren't already installed.
+As with installing from source, installation from PyPI can fail if `shapely` and `psycopg2` aren't already installed.
 Follow the above instructions for installing these in your environment. 
 
 Then install via pip:
@@ -50,7 +48,7 @@ Then install via pip:
 pip install aiovectortiler
 ```
 
-Once installed as a module, you can use an `example_aiovectortiler_script.py` to wrap the server in your own code:
+Once installed as a module, you can use an `example_aiovectortiler_script.py` to wrap the server in your code environment:
 ```
 from aiovectortiler.serve import serve_tiles
 
@@ -60,8 +58,9 @@ host = '0.0.0.0'  # this parameter is optional if req'd for overriding the defau
 port = '8080'  # this parameter is optional if req'd for overriding the default host port
 
 serve_tiles(server_configs, layer_recipes, host, port)
+
+# this would run from the command line as: python /path/to/example_python_script.py
 ```
-Such a script can then be run from the command line, e.g.: `python example_python_script.py`
 
 ## Installation using docker
 
