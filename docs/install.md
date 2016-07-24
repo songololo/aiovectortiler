@@ -22,7 +22,7 @@ python aiovectortiler/serve.py --server_configs=/path/to/server_config.yaml --la
 pip install aiovectortiler
 ```
 
-`example_python_script.py` containing your server config and recipes folder path, which can then be run directly:
+An `example_aiovectortiler_script.py` can be used to invoke the server as follows:
 ```
 from aiovectortiler.serve import serve_tiles
 
@@ -33,7 +33,7 @@ port = '8080'  # this parameter is optional if req'd for overriding the default 
 
 serve_tiles(server_configs, layer_recipes, host, port)
 ```
-Then run from the command line per usual: `python example_python_script.py`
+Such a script would be run from the command line, e.g.: `python example_python_script.py`
 
 ## Installation using docker
 
