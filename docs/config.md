@@ -1,20 +1,11 @@
 # Configuration
 
 
-## Examples 
-
-Looking at examples is often the best way to learn, so here are some:
-
-- [https://github.com/etalab/utilery-osm-recipe/blob/master/utilery.yml](https://github.com/etalab/utilery-osm-recipe/blob/master/utilery.yml)
-- [https://github.com/etalab/utilery-recipe-jurpol/blob/master/jurpol.yml](https://github.com/etalab/utilery-recipe-jurpol/blob/master/jurpol.yml)
-- [https://github.com/etalab/utilery-recipe-ban/blob/master/ban.yml](https://github.com/etalab/utilery-recipe-ban/blob/master/ban.yml)
-
-
 ## Overview
 
 Application configuration is provided by means of a YAML [server configuration file](#server-configuration).
 
-Layer recipe configuration is provided by YAML [recipe configuration files](#recipes).
+Layer recipe configuration is provided by means of a folder containing one or more YAML [recipe configuration files](#recipes).
 
 
 ## Server configuration
@@ -91,6 +82,14 @@ Default dict to use when serving the `/tilejson/` endpoint.
 
 Each recipe is a single YAML file.
 
+### Recipe Examples 
+
+Looking at examples is often the best way to learn:
+
+- [https://github.com/etalab/utilery-osm-recipe/blob/master/utilery.yml](https://github.com/etalab/utilery-osm-recipe/blob/master/utilery.yml)
+- [https://github.com/etalab/utilery-recipe-jurpol/blob/master/jurpol.yml](https://github.com/etalab/utilery-recipe-jurpol/blob/master/jurpol.yml)
+- [https://github.com/etalab/utilery-recipe-ban/blob/master/ban.yml](https://github.com/etalab/utilery-recipe-ban/blob/master/ban.yml)
+
 ### **Inheritable keys**
 
 The `scale`, `buffer`, `clip`, and `SRID` keys can be set in the [recipe configuration file's](#recipes) recipe, layer, or query levels. 
@@ -139,3 +138,4 @@ Minimum zoom this query should be run at.
 ##### sql (string) — *required*
 The actual sql to be run for this query. Must expose the geometry column as `way`.
 Available variables: `!bbox!`, `!zoom!`, `!pixel_width!`.
+

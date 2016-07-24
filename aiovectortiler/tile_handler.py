@@ -6,6 +6,7 @@ import psycopg2
 import logging
 
 import aiohttp.errors
+from aiohttp.web import Response
 from aiovectortiler.config_handler import Configs
 
 logger = logging.getLogger(__name__)
@@ -26,6 +27,12 @@ class ServeTile():
 
     @classmethod
     async def serve(cls, request):
+
+        # TODO: finish & confirm intent & function of 'request' plugin hook
+        endpoint = request.path.split('.')[-1]
+        path_args = list(request.match_info.keys())
+        #Configs.plugins.hook('request', endpoint=endpoint, request=request, **path_args)
+
         # fetch query parameters from request info
         x = int(request.match_info['x'])
         y = int(request.match_info['y'])
@@ -64,8 +71,13 @@ class ServeTile():
             else:
                 layer = recipe.layers[layer_name]
                 layer_data.append(await cls.query_layer(layer, zoom, west, south, east, north))
-        #TODO: reimplement plugins
-        return cls.post_process(layer_data)
+
+        # TODO: finish & confirm intent & function of 'request' plugin hook
+        # Configs.plugins.hook('request', response=response, request=request)
+
+        content_type, body = cls.post_process(layer_data)
+        return Response(content_type=content_type, body=body)
+
 
     @classmethod
     async def query_layer(cls, layer, zoom, west, south, east, north):
@@ -150,7 +162,7 @@ class ServeJSON(ServeTile):
     @staticmethod
     def post_process(layer_data):
         response_content = ujson.dumps(layer_data)
-        return 'application/json', response_content
+        return 'application/json', response_content.encode()
 
 
 class ServeGeoJSON(ServeJSON):
@@ -166,7 +178,7 @@ class ServeGeoJSON(ServeJSON):
             "type": "FeatureCollection",
             "features": layer_data
         })
-        return 'application/json', response_content
+        return 'application/json', response_content.encode()
 
 
 class TileJson():

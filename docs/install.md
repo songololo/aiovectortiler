@@ -33,13 +33,15 @@ cd aiovectortiler
 pip install .  # Note the trailing period
 ```
 You can now run the app from the command line:
+```
 python /path/to/aiovectortiler/aiovectortiler/serve.py \
     --server_configs=/path/to/server_config.yaml \
     --layer_recipes=/path/to/recipes_folder/
+```
 
 ## Installation from PyPI
 
-As with installing from source, installation from PyPI can fail if `shapely` and `psycopg2` aren't already installed.
+As with installing from source, installation from PyPI can fail if `shapely`, `psycopg2`, and `protobuf` aren't already separately installed.
 Follow the above instructions for installing these in your environment. 
 
 You can then proceed to install aiovectortiler via pip: 
@@ -75,4 +77,4 @@ docker run -p 8080:80 shongololo:aiovectortiler
 
 ## Next steps
 
-Setting up your [server and layer configurations](config.md).
+Set up your [server and layer configurations](config.md).

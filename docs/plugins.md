@@ -17,15 +17,7 @@ You then need to [register it](#registering-a-plugin).
 
 Just add its path into the `PLUGINS` [config](config.md) key.
 
-    PLUGINS = ['path/to/plugin_filef']
-
-You can also add the plugin reference directly:
-
-    class MyPlugin(object):
-        pass
-
-    PLUGINS = [MyPlugin]
-
+    PLUGINS = ['path/to/plugin_file']
 
 ## Hooks
 
@@ -46,9 +38,10 @@ Parameters:
 * **config**: the [config](config.md) object
 * **recipes**: the loaded recipes
 
-### on_request(endpoint, request, **kwargs)
+### on_request(request, **kwargs)
 
-Sent on request processing. If the hook returns a response, this response will be used and returned without calling the others hooks in the list nor the utilery view.
+Sent on request processing. 
+If the hook returns a response, this response will be used and returned without calling the others hooks in the list nor the utilery view.
 
 Parameters:
 

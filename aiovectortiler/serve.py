@@ -45,6 +45,14 @@ def serve_tiles(server_configs, layer_recipes, host='0.0.0.0', port='8080'):
     logger = logging.getLogger(__name__)
     logger.info('STARTING ASYNCIO TILE SERVER APP')
 
+    # load plugins
+    logger.info('Loading plugins')
+    Configs.plugins = Plugins
+    Configs.plugins.load(Configs.server)
+
+    # TODO: confirm intent & function of 'before_load' plugin hook
+    Configs.plugins.hook('before_load', config=Configs.server)
+
     # set the layer configs
     for file in os.listdir(os.path.abspath(layer_recipes)):
         if file.endswith('.yaml') or file.endswith('.yml'):
@@ -64,10 +72,8 @@ def serve_tiles(server_configs, layer_recipes, host='0.0.0.0', port='8080'):
             Configs.recipes['default_recipe'] = Configs.recipes[first_key]
             break
 
-    # load plugins
-    logger.info('Loading plugins')
-    Configs.Plugins = Plugins
-    Plugins.load(Configs.server)
+    # TODO: confirm intent & function of 'load' plugin hook
+    Configs.plugins.hook('load', config=Configs.server, recipes=Configs.recipes)
 
     # create server app
     logger.info('Creating the server app')
@@ -75,25 +81,23 @@ def serve_tiles(server_configs, layer_recipes, host='0.0.0.0', port='8080'):
 
     # setup url routes and corresponding handlers
     async def request_pbf(request):
-        content_type, body = await ServePBF.serve(request)
-        return web.Response(content_type=content_type, body=body)
+        return await ServePBF.serve(request)
     app.router.add_route('GET', '/{layers}/{z}/{x}/{y}.pbf', request_pbf)
     app.router.add_route('GET', '/{recipe}/{layers}/{z}/{x}/{y}.pbf', request_pbf)
     app.router.add_route('GET', '/{layers}/{z}/{x}/{y}.mvt', request_pbf)
     app.router.add_route('GET', '/{recipe}/{layers}/{z}/{x}/{y}.mvt', request_pbf)
 
     async def request_geojson(request):
-        content_type, body = await ServeGeoJSON.serve(request)
-        return web.Response(content_type=content_type, body=body.encode())
+        return await ServeGeoJSON.serve(request)
     app.router.add_route('GET', '/{layers}/{z}/{x}/{y}.geojson', request_geojson)
     app.router.add_route('GET', '/{recipe}/{layers}/{z}/{x}/{y}.geojson', request_geojson)
 
     async def request_json(request):
-        content_type, body = await ServeJSON.serve(request)
-        return web.Response(content_type=content_type, body=body.encode())
+        return await ServeJSON.serve(request)
     app.router.add_route('GET', '/{layers}/{z}/{x}/{y}.json', request_json)
     app.router.add_route('GET', '/{recipe}/{layers}/{z}/{x}/{y}.json', request_json)
 
+    #TODO: confirm and test request_tilejson
     async def request_tilejson(request):
         content_type, body = TileJson.get()
         return web.Response(content_type=content_type, body=body.encode())
