@@ -8,15 +8,21 @@ You'll also need access to a running PostGIS database which hosts your data.
 
 ## Installation from source
 
-First make sure that your context has `python 3.5`, `pip`, `git`, `psycopg2` and `shapely` installed.
+First make sure that your context has `python 3.5`, `pip`, `git`, `psycopg2` and `shapely` installed, otherwise the automated installation of requirements is likely to fail.
 
-For example, on Ubuntu 16.04:
+For example, on Ubuntu:
 ```
+# If using an Ubuntu version earlier than 16.04, first add the deadsnakes PPA.
+sudo add-apt-repository -y ppa:fkrull/deadsnakes
+
+# Then install the packages
 apt-get update \
     && apt-get install -y git build-essential python3 python3-pip python3-psycopg2 python3-shapely \
     && pip3 install pip --upgrade
 ```
 On Mac, the conda python package manager is recommended as an easy manner for installing these packages.
+
+On Windows, the easiest manner is to download prebuilt binaries.
 
 Once these packages are available in your environment, proceed with:
 ```
@@ -32,9 +38,9 @@ python aiovectortiler/serve.py --server_configs=/path/to/server_config.yaml --la
 
 ## Installation from PyPI
 
-Installation from `pip` can fail if `shapely` and `psycopg2` aren't already installed. It is therefore recommended to install these first. 
+As with installing from source, installation from `pip` can fail if `shapely` and `psycopg2` aren't already installed. Follow the above instructions for installing these in your environment. 
 
-Then run:
+Then proceed to run:
 ```
 pip install aiovectortiler
 ```
@@ -50,7 +56,7 @@ port = '8080'  # this parameter is optional if req'd for overriding the default 
 
 serve_tiles(server_configs, layer_recipes, host, port)
 ```
-Such a script would be run from the command line, e.g.: `python example_python_script.py`
+Such a script can then be run from the command line, e.g.: `python example_python_script.py`
 
 ## Installation using docker
 
