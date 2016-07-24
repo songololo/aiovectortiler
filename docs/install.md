@@ -7,10 +7,41 @@ Python 3.5 is therefore an absolute requirement.
 
 You'll also need access to a running PostGIS database which hosts your data.
 
+## Installation using docker
+
+To create a docker image, you'll need a directory containing:
+- A `Dockerfile`, for which you can use [`aiovectortiler/configs/Dockerfile`](https://github.com/shongololo/aiovectortiler/blob/master/configs/Dockerfile) as your template;
+- Your `server_configs.yaml` file (which can be named otherwise, just remember to update the reference in the Dockerfile accordingly);
+- A `layer_recipes` folder (which can likewise be named otherwise as long as the Dockerfile reference is also changed).
+
+Your directory should now look something like this:
+```
+aiovectortiler_docker_folder
+ - Dockerfile
+ - server_configs.yaml
+ - layer_recipes_folder
+    - recipe_1.yaml
+    - recipe_2.yaml
+    - etc.
+```
+Navigate to your folder in a terminal window, then build the docker image (note the trailing period), for example:
+```
+docker build --tag='test:aiovectortiler' .
+```
+Then run the image, binding your docker container port to your desired localhost port:
+```
+docker run -i -t -p 8080:80 test:aiovectortiler
+```
+
+Your aiovectortiler server will now be running and available at `localhost:80`
+
+A docker-compose file can also be used to create your image and place it behind an nginx reverse proxy with caching.
+(`docker-compose.yml` example file pending.)
+
 ## Installation from source
 
-First make sure that your context has `python 3.5`, `pip`, `git`, `psycopg2`, `shapely`, and `protobuf` installed.
-If not, then the installation of the python requirements via `pip install .` is likely to fail.
+First make sure that your environment has `python 3.5`, `pip`, `git`, `psycopg2`, `shapely`, and `protobuf` installed.
+If not, then the installation of the python requirements via `pip install .` may fail.
 
 For example, on Ubuntu:
 ```
@@ -22,9 +53,9 @@ sudo apt-get update \
     && sudo apt-get install -y git build-essential python3 python3-pip python3-psycopg2 python3-shapely protobuf-compiler\
     && pip3 install pip --upgrade
 ```
-On a Mac, the conda python package manager is recommended as an easy manner for installing these packages.
+On a Mac, the conda python package manager is an easy manner to install these packages.
 
-On Windows, the easiest manner is to download prebuilt binaries.
+On Windows, downloaded prebuilt binaries tends to be the best option.
 
 Once these packages are available in your environment, proceed with:
 ```
@@ -42,7 +73,6 @@ python /path/to/aiovectortiler/aiovectortiler/serve.py \
 ## Installation from PyPI
 
 As with installing from source, installation from PyPI can fail if `shapely`, `psycopg2`, and `protobuf` aren't already separately installed.
-Follow the above instructions for installing these in your environment. 
 
 You can then proceed to install aiovectortiler via pip: 
 ```
@@ -60,19 +90,7 @@ port = '8080'  # this parameter is optional if req'd for overriding the default 
 
 serve_tiles(server_configs, layer_recipes, host, port)
 
-# this would run from the command line per: python /path/to/example_python_script.py
-```
-
-## Installation using docker
-
-1. Pull the docker image
-```
-docker pull shongololo:aiovectortiler
-```
-
-2. Run the docker image, passing-in environment variables for your server config and recipes folder, and map the container port to the preferred host port.
-```
-docker run -p 8080:80 shongololo:aiovectortiler
+# this script could then be run from the command line per: python /path/to/example_python_script.py
 ```
 
 ## Next steps
