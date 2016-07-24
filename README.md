@@ -9,9 +9,7 @@ aiovectortiler can serve vector tiles in json, [geojson](http://geojson.org) and
 It is compatible with with MVT client-side vector tile libraries such as [Mapbox GL JS](https://www.mapbox.com/mapbox-gl-js/api/). 
 MVT encoding is performed by Mapzen's [mapbox-vector-tile](https://github.com/tilezen/mapbox-vector-tile) module.
 
-It is easy to configure by means of SQL requests provided in YAML recipe files.
-
-An example of a recipe to use with OpenStreetMap data:
+It is easy to configure by means of SQL requests provided in YAML recipe files. An example recipe for OpenStreetMap data:
 [https://github.com/etalab/utilery-osm-recipe/blob/master/utilery.yml](https://github.com/etalab/utilery-osm-recipe/blob/master/utilery.yml)
 
 Note that tests are pending reimplementation for compatibility with the aiohttp ecosystem.
