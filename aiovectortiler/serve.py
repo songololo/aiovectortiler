@@ -50,7 +50,7 @@ def serve_tiles(server_configs, layer_recipes, host='0.0.0.0', port='8080'):
     Configs.plugins = Plugins
     Configs.plugins.load(Configs.server)
 
-    # TODO: confirm intent & function of 'before_load' plugin hook
+    # TODO: develop and test some 'before_load' plugin hooks
     Configs.plugins.hook('before_load', config=Configs.server)
 
     # set the layer configs
@@ -65,6 +65,7 @@ def serve_tiles(server_configs, layer_recipes, host='0.0.0.0', port='8080'):
         elif default_recipe[-5:] == '.yaml':
             default_recipe = default_recipe[:-5]
         Configs.recipes['default_recipe'] = Configs.recipes[default_recipe]
+        Configs.recipes['default_recipe'].name = 'default_recipe_(same as {0})'.format(default_recipe)
         logger.info('Default recipe set to: {0}'.format(default_recipe))
     except KeyError:
         logger.info('No default recipe set, using the first or only layer as default.')
@@ -72,7 +73,7 @@ def serve_tiles(server_configs, layer_recipes, host='0.0.0.0', port='8080'):
             Configs.recipes['default_recipe'] = Configs.recipes[first_key]
             break
 
-    # TODO: confirm intent & function of 'load' plugin hook
+    # TODO: develop and test some 'load' plugin hooks
     Configs.plugins.hook('load', config=Configs.server, recipes=Configs.recipes)
 
     # create server app

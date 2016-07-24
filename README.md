@@ -2,7 +2,7 @@
 
 aiovectortiler is an asynchronous micro vector tile application that serves data from PostGIS.
 
-It is based on the [Utilery](https://github.com/tilery/aiovectortiler) package created by Yohan Boniface.
+It is based on the [Utilery](https://github.com/tilery/utilery) package created by Yohan Boniface.
 
 Documentation: http://aiovectortiler.readthedocs.org/
 

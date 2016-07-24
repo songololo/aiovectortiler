@@ -114,8 +114,9 @@ SRID to use.
 ##### layers (sequence) - *required*
 A sequence of [layers](#layer-keys) mappings.
 
-##### name (string) — *optional* — default: "default"
-**Required** when you have more than one recipe.
+##### name (string) — *required*
+
+##### description (string) — *optional*
 
 ### **Layer keys**
 The keys to use in each layer entry.

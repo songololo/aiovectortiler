@@ -28,10 +28,13 @@ class ServeTile():
     @classmethod
     async def serve(cls, request):
 
-        # TODO: finish & confirm intent & function of 'request' plugin hook
+        # TODO: develop and test some 'request' plugin hooks
         endpoint = request.path.split('.')[-1]
-        path_args = list(request.match_info.keys())
-        #Configs.plugins.hook('request', endpoint=endpoint, request=request, **path_args)
+        path_args = request.match_info
+        request_hook_response = Configs.plugins.hook('request', endpoint=endpoint, request=request, **path_args)
+        # if a request_hook_response is received, return and skip the regular processing:
+        if request_hook_response:
+            return request_hook_response
 
         # fetch query parameters from request info
         x = int(request.match_info['x'])
@@ -72,11 +75,16 @@ class ServeTile():
                 layer = recipe.layers[layer_name]
                 layer_data.append(await cls.query_layer(layer, zoom, west, south, east, north))
 
-        # TODO: finish & confirm intent & function of 'request' plugin hook
-        # Configs.plugins.hook('request', response=response, request=request)
-
         content_type, body = cls.post_process(layer_data)
-        return Response(content_type=content_type, body=body)
+        response = Response(content_type=content_type, body=body)
+
+        # TODO: develop and test some 'request' plugin hooks
+        response_hook_response = Configs.plugins.hook('request', response=response, request=request)
+        # if a response_hook_response is received, it overrides the regular response:
+        if response_hook_response:
+            return response_hook_response
+        else:
+            return response
 
 
     @classmethod
@@ -195,4 +203,4 @@ class TileJson():
                     "description": layer.description,
                     "id": layer.id
                 })
-        return ujson.dumps(base)
+        return 'application/json', ujson.dumps(base)

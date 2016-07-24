@@ -25,8 +25,11 @@ class Configs:
         else:
             raise ValueError('File in layer recipes folder does not have a YAML extension: {0}'.format(recipe_configs))
         with open(recipe_configs) as r_c:
-            recipe = yaml.load(r_c.read())
-            cls.recipes[recipe_name] = Recipe(recipe)
+            load_recipe = yaml.load(r_c.read())
+            cls.recipes[recipe_name] = Recipe(load_recipe)
+            # add the recipe name based on the file name
+            # this is needed by the tilejson query
+            cls.recipes[recipe_name].name = recipe_name
             logger.info('Adding layer: {0}'.format(recipe_name))
 
 
@@ -86,7 +89,11 @@ class Layer(dict):
 
     @property
     def id(self):
-        return '{}:{}'.format(self.recipe.name, self.name)
+        return '{0}:{1}'.format(self.recipe.name, self.name)
+
+    @property
+    def description(self):
+        return self.get('description', 'no description provided')
 
 
 class Query(dict):
