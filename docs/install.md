@@ -9,7 +9,7 @@ You'll also need access to a running PostGIS database which hosts your data.
 
 ## Installation from source
 
-First make sure that your context has `python 3.5`, `pip`, `git`, `psycopg2` and `shapely` installed.
+First make sure that your context has `python 3.5`, `pip`, `git`, `psycopg2`, `shapely`, and `protobuf` installed.
 If not, then the installation of the python requirements via `pip install` is likely to fail.
 
 For example, on Ubuntu:
@@ -21,6 +21,10 @@ sudo add-apt-repository -y ppa:fkrull/deadsnakes
 sudo apt-get update \
     && sudo apt-get install -y git build-essential python3 python3-pip python3-psycopg2 python3-shapely \
     && pip3 install pip --upgrade
+
+# On earlier versions of Ubuntu you will also need to install the protobuf library
+sudo apt-get install -y protobuf-compiler
+
 ```
 On a Mac, the conda python package manager is recommended as an easy manner for installing these packages.
 
