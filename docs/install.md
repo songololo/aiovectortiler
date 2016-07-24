@@ -53,11 +53,7 @@ docker pull shongololo:aiovectortiler
 
 2. Run the docker image, passing-in environment variables for your server config and recipes folder, and map the container port to the preferred host port.
 ```
-docker run \
-    -e AIOVECTORTILER_SERVER_CONFIGS=/path/to/server_config.yaml \
-    -e AIOVECTORTILER_LAYER_RECIPES=/path/to/recipes_folder \
-    -p 8080:80 \
-    shongololo:aiovectortiler
+docker run -p 8080:80 shongololo:aiovectortiler
 ```
 
 ## Next steps
