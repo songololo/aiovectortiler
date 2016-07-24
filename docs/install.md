@@ -2,25 +2,27 @@
 
 ## Compatibility and Requirements
 
-Due to the use of Python's asyncio, Python 3.5 is an absolute requirement.
+aiovectortiler uses Python 3.5's new asyncio module to provide asynchronous handling of HTTP requests and database communication.
+Python 3.5 is therefore an absolute requirement.
 
 You'll also need access to a running PostGIS database which hosts your data.
 
 ## Installation from source
 
-First make sure that your context has `python 3.5`, `pip`, `git`, `psycopg2` and `shapely` installed, otherwise the automated installation of requirements is likely to fail.
+First make sure that your context has `python 3.5`, `pip`, `git`, `psycopg2` and `shapely` installed.
+If not, then the installation of the python requirements via `pip install` is likely to fail.
 
 For example, on Ubuntu:
 ```
 # If using an Ubuntu version earlier than 16.04, first add the deadsnakes PPA.
 sudo add-apt-repository -y ppa:fkrull/deadsnakes
 
-# Then install the packages
+# Install the packages
 apt-get update \
     && apt-get install -y git build-essential python3 python3-pip python3-psycopg2 python3-shapely \
     && pip3 install pip --upgrade
 ```
-On Mac, the conda python package manager is recommended as an easy manner for installing these packages.
+On a Mac, the conda python package manager is recommended as an easy manner for installing these packages.
 
 On Windows, the easiest manner is to download prebuilt binaries.
 
@@ -40,14 +42,15 @@ python aiovectortiler/serve.py \
 
 ## Installation from PyPI
 
-As with installing from source, installation from `pip` can fail if `shapely` and `psycopg2` aren't already installed. Follow the above instructions for installing these in your environment. 
+As with installing from source, installation from `pip` can fail if `shapely` and `psycopg2` aren't already installed.
+Follow the above instructions for installing these in your environment. 
 
-Then proceed to run:
+Then install via pip:
 ```
 pip install aiovectortiler
 ```
 
-You can then use an `example_aiovectortiler_script.py` to invoke the server as follows:
+Once installed as a module, you can use an `example_aiovectortiler_script.py` to wrap the server in your own code:
 ```
 from aiovectortiler.serve import serve_tiles
 
