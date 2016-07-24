@@ -33,7 +33,9 @@ The DSN strings are per the [LibPQ connection string format](http://www.postgres
 
 #### default_recipe - *optional*
 
-If a default recipe is not provided, then the app will set the only, or if more than one, the first layer as the 'default' layer. When a URL request is made without a request for a specific layer, then the default layer will be used. If you have more than one layer, then by setting this key you can determine which of the layers is the 'default' layer.
+If a default recipe is not provided, then the app will select the first or only recipe file as the 'default'.
+When a URL request is made without a request for a specific layer, then the default layer will be used. 
+If you have more than one layer, then by setting this key you can determine which of the layers is the 'default' layer.
 
     default_recipe: my_default_recipe_name
 
@@ -45,7 +47,7 @@ The preferred log level based on standard python logging levels, e.g. debug, inf
 
 #### SRID - *optional*
 
-The SRID system for the tile system. This should ordinarily be 3857.
+The global SRID system for the tile system. This should ordinarily be 3857.
  
     SRID: 3857
 
@@ -85,18 +87,15 @@ A list of paths to optional [plugins](plugins.md).
 Default dict to use when serving the `/tilejson/` endpoint.
 
 
-#### A note on global layer keys
-
-The `scale`, `buffer`, `clip`, and `SRID` keys can be set in the [recipe configuration file's](#recipes) recipe, layer, or query levels. However, these can be omitted where preferred and a global default value can be provided in the server config file. This global value will only apply in cases where these keys have not been provided at the local recipe, layer, or query level.
-
-
 ## Recipes
 
 Each recipe is a single YAML file.
 
 ### **Inheritable keys**
 
-These keys can be set at the first level of the YAML file, at the layer level, or at the query level. These keys can also be defined in the server configs file for global defaults. However, these global defaults will only be used in the event that the keys are not provided at the local recipe level.
+The `scale`, `buffer`, `clip`, and `SRID` keys can be set in the [recipe configuration file's](#recipes) recipe, layer, or query levels. 
+However, these can be omitted where preferred and a global default value can be provided in the server config file instead. 
+This global value will only apply in cases where these keys have not been provided at the local recipe, layer, or query level.
 
 ##### buffer (integer) — *optional* — default: 0
 Optional buffer (in pixels) to use when querying data.

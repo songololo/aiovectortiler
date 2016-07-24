@@ -43,7 +43,7 @@ python /path/to/aiovectortiler/aiovectortiler/serve.py \
 As with installing from source, installation from PyPI can fail if `shapely` and `psycopg2` aren't already installed.
 Follow the above instructions for installing these in your environment. 
 
-Then install via pip:
+Then install aiovectortiler via pip: 
 ```
 pip install aiovectortiler
 ```
