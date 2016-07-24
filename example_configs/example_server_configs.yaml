@@ -12,11 +12,11 @@ builtin_plugins: []
 plugins: []
 
 tileJSON_spec: >
-  {tilejson: '2.1.0',
-  name: 'aiovectortiler',
-  description: 'Asynchronous micro vector tile server for PostGIS.',
-  scheme: 'xyz',
-  format: 'pbf',
-  tiles: [
-    'http://vector.myserver.org/all/{z}/{x}/{y}.pbf'
+  {"tilejson": "2.1.0",
+  "name": "aiovectortiler",
+  "description": "Asynchronous micro vector tile server for PostGIS.",
+  "scheme": "xyz",
+  "format": "pbf",
+  "tiles": [
+    "http://vector.myserver.org/all/{z}/{x}/{y}.pbf"
   ]}
