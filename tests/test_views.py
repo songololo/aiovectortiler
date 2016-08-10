@@ -2,6 +2,7 @@ import ujson
 
 from aiovectortiler.config_handler import Layer, Recipe
 from .utils import copy
+from .test_conf import client, fetchall, config, recipes, layer, plugins
 
 
 def test_simple_request(client, fetchall):
