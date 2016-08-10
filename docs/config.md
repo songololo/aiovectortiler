@@ -12,13 +12,13 @@ Layer recipe configuration is provided by means of a folder containing one or mo
 
 The server configuration file sets several important parameters for your app.
 
-#### databases (list) - *required*
+#### databases (dict) - *required*
 
 At least one database connection must be provided. Use the `default` key for your primary (or only) database.
 
     databases:
-    - default: dsn_connection_string
-    - another_db: another_dsn_connection_string
+      default: dsn_connection_string
+      another_db: another_dsn_connection_string
 
 The DSN strings are per the [LibPQ connection string format](http://www.postgresql.org/docs/current/static/libpq-connect.html#LIBPQ-CONNSTRING)
 
