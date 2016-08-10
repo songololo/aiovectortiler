@@ -9,7 +9,8 @@ You'll also need access to a running PostGIS database which hosts your data.
 
 ## Installation using docker
 
-To create a docker image, you'll need a directory containing:
+To create a docker image, you'll need a directory containing:  
+
 * A `Dockerfile`, for which you can use [`aiovectortiler/example_configs/Dockerfile`](https://github.com/shongololo/aiovectortiler/blob/master/example_configs/Dockerfile) as your template;
 
 * Your `server_configs.yaml` file (which can be named otherwise, just remember to update the reference in the Dockerfile accordingly);
