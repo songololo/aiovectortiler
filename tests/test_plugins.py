@@ -1,5 +1,7 @@
 from aiohttp.web import Response
 
+from .test_conf import client, plugins, config, fetchall
+
 
 def test_on_before_load(config):
     # See TestPlugin in conftest.py
