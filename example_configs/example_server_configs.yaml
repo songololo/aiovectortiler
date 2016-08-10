@@ -1,5 +1,5 @@
 databases:
-- default: 'dbname=my_db user=my_user password= host=localhost'
+  default: 'dbname=my_db user=my_user password= host=localhost'
 default_recipe: 'example_recipe'
 log_level: 'info'
 SRID: 3857  # optional global parameter
