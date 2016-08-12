@@ -2,7 +2,6 @@ import ujson
 import math
 import mercantile
 import mapbox_vector_tile
-import psycopg2
 import logging
 
 import aiohttp.errors
@@ -98,7 +97,7 @@ class ServeTile():
             db_name = query.db_name
             try:
                 features = await Configs.DB.fetchall(sql, geom_processor=cls.geom_processor, db_name=db_name)
-            except (psycopg2.ProgrammingError, psycopg2.InternalError) as e:
+            except Exception as e:
                 msg = str(e)
                 if Configs.server['debug']:
                     msg = "{} ** Query was: {}".format(msg, sql)

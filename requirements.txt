@@ -2,7 +2,7 @@ PyYAML
 mapbox-vector-tile
 mercantile
 protobuf>=3.0.0b4
-psycopg2
+asyncpg
 aiopg
 aiohttp
 aiohttp_cors

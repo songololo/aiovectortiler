@@ -6,7 +6,7 @@ python:
 before_install:
 - sudo add-apt-repository -y ppa:fkrull/deadsnakes
 - sudo apt-get update
-- sudo apt-get install -y build-essential python3.5 python3-pip python3-psycopg2 python3-shapely protobuf-compiler
+- sudo apt-get install -y build-essential python3.5 python3-pip python3-shapely protobuf-compiler
 install:
 - pip install -r requirements.txt
 - pip install -r requirements-dev.txt

@@ -1,6 +1,6 @@
 log_level: 'info'
 databases:
-  default: 'dbname=my_db user=my_user password= host=localhost'
+  default: 'postgres://user:password@host_address:port_number/database_name'
 default_recipe: 'example_recipe'
 SRID: 3857  # optional global parameter
 scale: 1  # optional global parameter
