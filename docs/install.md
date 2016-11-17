@@ -9,37 +9,24 @@ You'll also need access to a running PostGIS database which hosts your data.
 
 ## Installation using docker
 
-To create a docker image, you'll need a directory containing:  
-
-* A `Dockerfile`, for which you can use [`aiovectortiler/example_configs/Dockerfile`](https://github.com/shongololo/aiovectortiler/blob/master/example_configs/Dockerfile) as your template;
-
-* Your `server_configs.yaml` file (which can be named otherwise, just remember to update the reference in the Dockerfile accordingly);
-
-* A `layer_recipes` folder (which can likewise be named otherwise as long as the Dockerfile reference is also changed).
+To use with docker, you'll need a directory containing:
+* Your `server_configs.yaml` file;
+* A `layer_recipes` folder.
 
 Your directory should now look something like this:
 ```
 aiovectortiler_docker_folder
- - Dockerfile
  - server_configs.yaml
  - layer_recipes_folder
     - recipe_1.yaml
     - recipe_2.yaml
     - etc.
 ```
-Navigate to your folder in a terminal window, then build the docker image (note the trailing period), for example:
+Then run the image, binding your docker container port to your desired localhost port, and mapping your folder to `/configs``:
 ```
-docker build --tag='test:aiovectortiler' .
+docker run -i -t -p 8080:80 -v /path/to/configs:/configs test:aiovectortiler
 ```
-Then run the image, binding your docker container port to your desired localhost port:
-```
-docker run -i -t -p 8080:80 test:aiovectortiler
-```
-
 Your aiovectortiler server will now be running and available at `localhost:80`
-
-A docker-compose file can also be used to create your image and place it behind an nginx reverse proxy with caching.
-(`docker-compose.yml` example file pending.)
 
 ## Installation from source
 

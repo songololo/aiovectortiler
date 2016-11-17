@@ -8,7 +8,7 @@ RUN apt-get update \
 RUN git clone https://github.com/shongololo/aiovectortiler.git
 RUN pip3 install /aiovectortiler/.
 
-VOLUME ["/configs/"]
+VOLUME /configs/
 
 EXPOSE 8080
 
