@@ -8,10 +8,8 @@ RUN apt-get update \
 RUN git clone https://github.com/shongololo/aiovectortiler.git
 RUN pip3 install /aiovectortiler/.
 
-# edit the server_conf.yaml and layer_recipe folder names and paths according to your locations
-COPY server_conf.yaml server_conf.yaml
-COPY layer_recipes layer_recipes
+VOLUME ["/configs/"]
 
 EXPOSE 8080
 
-CMD ["python3", "/aiovectortiler/aiovectortiler/serve.py", "--server_configs=server_conf.yaml", "--layer_recipes=layer_recipes/"]
+CMD ["python3", "/aiovectortiler/aiovectortiler/serve.py", "--server_configs=/configs/server_conf.yaml", "--layer_recipes=/configs/layer_recipes/"]
