@@ -5,13 +5,12 @@ dependencies:
 - python=3.5.1=0
 - pip=8.1.2=py35_0
 - PyYAML
-- psycopg2
 - ujson
 - pip:
   - protobuf>=3.0.0b4
   - mapbox-vector-tile
   - mercantile
-  - aiopg
+  - asyncpg
   - aiohttp
   - aiohttp_cors
   - cchardet

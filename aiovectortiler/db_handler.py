@@ -1,7 +1,5 @@
 import logging
-import aiopg
-import psycopg2
-import psycopg2.extras
+import asyncpg
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +11,7 @@ class DB(object):
     @classmethod
     async def connect(cls, db_name, dsn_string):
         if db_name not in cls._:
-            cls._[db_name] = await aiopg.create_pool(dsn_string)
+            cls._[db_name] = await asyncpg.create_pool(dsn_string)
         # if this is the first entry and if the name is not default, create a link
         # so doing the first db becomes the default, unless overwritten later by subsequent db pool
         if len(cls._) == 1 and db_name != 'default':
@@ -26,15 +24,15 @@ class DB(object):
             db_name = 'default'
         features = []
         async with cls._[db_name].acquire() as db_connection:
-            async with db_connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
-                await cursor.execute(query)
-                async for row in cursor:
+            # async with db_connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+            records = await db_connection.fetch(query)
+            for record in records:
                     features.append({
-                        'geometry': geom_processor(row['_way']),
-                        'properties': cls.row_to_dict(row)
+                        'geometry': geom_processor(record['_way']),
+                        'properties': cls.row_to_dict(record)
                     })
         return features
 
     @staticmethod
-    def row_to_dict(row):
-        return {key:value for key, value in row.items() if not key.startswith('_') and not key == 'way'}
+    def row_to_dict(record):
+        return {key: value for key, value in record.items() if not key.startswith('_') and not key == 'way'}

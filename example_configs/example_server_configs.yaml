@@ -1,7 +1,7 @@
-databases:
-- default: 'dbname=my_db user=my_user password= host=localhost'
-default_recipe: 'example_recipe'
 log_level: 'info'
+databases:
+  default: 'postgres://user:password@host_address:port_number/database_name'
+default_recipe: 'example_recipe'
 SRID: 3857  # optional global parameter
 scale: 1  # optional global parameter
 buffer: 0  # optional global parameter
@@ -18,5 +18,5 @@ tileJSON_spec: >
   "scheme": "xyz",
   "format": "pbf",
   "tiles": [
-    "http://vector.myserver.org/all/{z}/{x}/{y}.pbf"
+    "https://vector_tile_demo_host.com/all/{z}/{x}/{y}.pbf"
   ]}

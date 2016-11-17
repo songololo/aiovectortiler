@@ -9,9 +9,12 @@ You'll also need access to a running PostGIS database which hosts your data.
 
 ## Installation using docker
 
-To create a docker image, you'll need a directory containing:
+To create a docker image, you'll need a directory containing:  
+
 * A `Dockerfile`, for which you can use [`aiovectortiler/example_configs/Dockerfile`](https://github.com/shongololo/aiovectortiler/blob/master/example_configs/Dockerfile) as your template;
+
 * Your `server_configs.yaml` file (which can be named otherwise, just remember to update the reference in the Dockerfile accordingly);
+
 * A `layer_recipes` folder (which can likewise be named otherwise as long as the Dockerfile reference is also changed).
 
 Your directory should now look something like this:
@@ -40,7 +43,7 @@ A docker-compose file can also be used to create your image and place it behind 
 
 ## Installation from source
 
-First make sure that your environment has `python 3.5`, `pip`, `git`, `psycopg2`, `shapely`, and `protobuf` installed.
+First make sure that your environment has `python 3.5`, `pip`, `git`, `shapely`, and `protobuf` installed.
 If not, then the installation of the python requirements via `pip install .` may fail.
 
 For example, on Ubuntu:
@@ -72,7 +75,7 @@ python /path/to/aiovectortiler/aiovectortiler/serve.py \
 
 ## Installation from PyPI
 
-As with installing from source, installation from PyPI can fail if `shapely`, `psycopg2`, and `protobuf` aren't already separately installed.
+As with installing from source, installation from PyPI can fail if `shapely` and `protobuf` aren't already separately installed.
 
 You can then proceed to install aiovectortiler via pip: 
 ```
