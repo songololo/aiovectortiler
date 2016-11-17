@@ -17,14 +17,15 @@ Your directory should now look something like this:
 ```
 aiovectortiler_docker_folder
  - server_configs.yaml
- - layer_recipes_folder
+ - layer_recipes
     - recipe_1.yaml
     - recipe_2.yaml
     - etc.
 ```
-Then run the image, binding your docker container port to your desired localhost port, and mapping your folder to `/configs``:
+Then run the image, binding your docker container port to your desired localhost port, 
+and mapping your folder to `/configs``:
 ```
-docker run -i -t -p 8080:80 -v /path/to/configs:/configs test:aiovectortiler
+docker run -i -t -p 8080:80 -v /path/to/local/configs:/configs shongololo/aiovectortiler
 ```
 Your aiovectortiler server will now be running and available at `localhost:80`
 
