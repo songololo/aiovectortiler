@@ -29,6 +29,8 @@ docker run -i -t -p 8080:80 -v /path/to/local/configs:/configs shongololo/aiovec
 ```
 Your aiovectortiler server will now be running and available at `localhost:80`
 
+> NOTE: If using docker, set your postgres connection DSN string to an actual IP address, not `localhost`.
+
 ## Installation from source
 
 First make sure that your environment has `python 3.5`, `pip`, `git`, `shapely`, and `protobuf` installed.

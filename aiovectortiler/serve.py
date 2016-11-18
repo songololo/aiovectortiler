@@ -17,21 +17,13 @@ from aiovectortiler.db_handler import DB
 from aiovectortiler.tile_handler import ServePBF, ServeGeoJSON, ServeJSON, TileJson
 
 
-def serve_tiles(server_configs, layer_recipes, host='0.0.0.0', port='8080'):
-
-    # allow for setting config parameters via environment variables
-    # this simplifies docker deployment
-    if not server_configs:
-        host = os.environ.get('AIOVECTORTILER_SERVER_CONFIGS')
-        if not os.path.isfile(os.path.abspath(server_configs)):
-            raise ValueError('Server configuration file has not been found')
-
-    if not layer_recipes:
-        host = os.environ.get('AIOVECTORTILER_LAYER_RECIPES')
-        if not os.path.isdir(os.path.abspath(layer_recipes)):
-            raise ValueError('Layer recipes folder has not been found')
-        if not os.listdir(os.path.abspath(layer_recipes)):
-            raise ValueError('Layer recipes folder is empty. Minimum 1 recipe is required.')
+def serve_tiles(server_configs, layer_recipes, host, port):
+    if not os.path.isfile(os.path.abspath(server_configs)):
+        raise FileNotFoundError('Server configuration file has not been found')
+    if not os.path.isdir(os.path.abspath(layer_recipes)):
+        raise FileNotFoundError('Layer recipes folder has not been found')
+    if not os.listdir(os.path.abspath(layer_recipes)):
+        raise FileNotFoundError('Layer recipes folder is empty. Minimum 1 recipe is required.')
 
     # set the server configs
     Configs.init_server_configs(os.path.abspath(server_configs))
@@ -132,7 +124,7 @@ def serve_tiles(server_configs, layer_recipes, host='0.0.0.0', port='8080'):
 
     # start the server
     logger.info('Starting the server app at host: {0}, port: {1}'.format(host, port))
-    web.run_app(app, host=host, port=port)
+    web.run_app(app, host=host, port=int(port))
 
 
 if __name__ == '__main__':
@@ -142,12 +134,12 @@ if __name__ == '__main__':
     ARGS.add_argument('--server_configs',
                       action="store",
                       dest='server_configs',
-                      default='',
+                      default='/configs/server_configs.yaml',
                       help='The YAML database config file')
     ARGS.add_argument('--layer_recipes',
                       action="store",
                       dest="layer_recipes",
-                      default='',
+                      default='/configs/layer_recipes/',
                       help='The YAML layers configs file')
     ARGS.add_argument('--host',
                       action="store",
