@@ -21,9 +21,9 @@ def serve_tiles(server_configs, layer_recipes, host, port):
     if not os.path.isfile(os.path.abspath(server_configs)):
         raise FileNotFoundError('Server configuration file has not been found')
     if not os.path.isdir(os.path.abspath(layer_recipes)):
-        raise FileNotFoundError('Layer recipes folder has not been found')
+        raise NotADirectoryError('Layer recipes folder has not been found')
     if not os.listdir(os.path.abspath(layer_recipes)):
-        raise FileNotFoundError('Layer recipes folder is empty. Minimum 1 recipe is required.')
+        raise FileExistsError('Layer recipes folder is empty. Minimum 1 recipe is required.')
 
     # set the server configs
     Configs.init_server_configs(os.path.abspath(server_configs))
