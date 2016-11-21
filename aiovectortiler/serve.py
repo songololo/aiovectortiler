@@ -7,6 +7,9 @@ import sys
 import logging
 import argparse
 import asyncio
+import uvloop
+
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 from aiohttp import web
 import aiohttp_cors
 
