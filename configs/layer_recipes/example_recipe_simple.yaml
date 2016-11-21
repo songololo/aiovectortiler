@@ -8,8 +8,5 @@ layers:
   - minzoom: 12
     maxzoom: 22
     sql: |
-      SELECT
-        "id",
-        ST_Transform(geom, 3857) as way
-      FROM
-        my_simple_layer
+      SELECT id, ST_Transform(geom, 3857) as way
+      FROM my_simple_layer

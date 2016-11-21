@@ -24,7 +24,6 @@ class DB(object):
             db_name = 'default'
         features = []
         async with cls._[db_name].acquire() as db_connection:
-            # async with db_connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
             records = await db_connection.fetch(query, timeout=20)
             for record in records:
                     features.append({
