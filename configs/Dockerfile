@@ -1,4 +1,4 @@
-# docker build --tag='shongololo/aiovectortiler' --file='~/configs/Dockerfile' .
+# docker build --tag='shongololo/aiovectortiler' --file='configs/Dockerfile' .
 
 FROM ubuntu:16.04
 MAINTAINER Gareth Simons <garethsimons@me.com>
@@ -8,7 +8,7 @@ RUN apt-get update \
 
 RUN pip3 install pip --upgrade
 
-RUN pip3 install PyYAML aiohttp aiohttp-cors asyncpg 'mapbox-vector-tile>=0.4.0' mercantile 'protobuf>=3.0.0' ujson
+RUN pip3 install PyYAML aiohttp aiohttp-cors asyncpg mapbox-vector-tile mercantile protobuf ujson uvloop
 
 COPY . /aiovectortiler
 RUN chmod -R 0755 /aiovectortiler
