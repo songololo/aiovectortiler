@@ -141,7 +141,7 @@ class ServePBF(ServeTile):
 
     @classmethod
     def geometry(cls, west, south, east, north):
-        return ('ST_AsText(ST_TransScale(%s, %.12f, %.12f, %.12f, %.12f)) as _way'  # noqa
+        return ('ST_AsText(ST_TransScale(ST_Force2d(%s), %.12f, %.12f, %.12f, %.12f)) as _way'  # noqa
                 % (cls.GEOMETRY, -west, -south,
                    4096 / (east - west),
                    4096 / (north - south)))
@@ -160,7 +160,7 @@ class ServeJSON(ServeTile):
 
     @classmethod
     def geometry(cls, west, south, east, north):
-        return "ST_AsGeoJSON(ST_Transform({way}, 4326)) as _way"  # noqa
+        return "ST_AsGeoJSON(ST_Transform(ST_Force2d({way}), 4326)) as _way"  # noqa
 
     @staticmethod
     def geom_processor(geometry):
