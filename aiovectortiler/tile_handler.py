@@ -99,7 +99,7 @@ class ServeTile():
                 features = await Configs.DB.fetchall(sql, geom_processor=cls.geom_processor, db_name=db_name)
             except Exception as e:
                 msg = str(e)
-                if Configs.server['debug']:
+                if Configs.server['log_level'].lower() == 'debug':
                     msg = "{} ** Query was: {}".format(msg, sql)
                     logger.error(msg)
         return {"name": layer['name'], "features": features}
@@ -200,6 +200,6 @@ class TileJson():
             for layer in recipe.layers.values():
                 base['vector_layers'].append({
                     "description": layer.description,
-                    "id": layer.id
+                    "id": layer.name
                 })
         return 'application/json', ujson.dumps(base)

@@ -23,7 +23,7 @@ class Configs:
         elif recipe_name[-5:] == '.yaml':
             recipe_name = recipe_name[:-5]
         else:
-            raise ValueError('File in layer recipes folder does not have a YAML extension: {0}'.format(recipe_configs))
+            raise FileExistsError('File in layer recipes folder does not have a YAML extension: {0}'.format(recipe_configs))
         with open(recipe_configs) as r_c:
             load_recipe = yaml.load(r_c.read())
             cls.recipes[recipe_name] = Recipe(load_recipe)
