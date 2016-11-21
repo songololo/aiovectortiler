@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 class ServeTile():
 
     # parameters shared by all queries
-    SQL_TEMPLATE = "SELECT {way}, * FROM ({sql}) AS data WHERE ST_IsValid(way) AND ST_Intersects(way, {bbox})"  # noqa
+    SQL_TEMPLATE = "SELECT {way}, * FROM ({sql}) AS data WHERE ST_IsValid(way) AND way && {bbox}"  # noqa
     GEOMETRY = "{way}"
 
     RADIUS = 6378137
