@@ -8,10 +8,12 @@ import aiohttp.errors
 from aiohttp.web import Response
 from aiovectortiler.config_handler import Configs
 
+from shapely import geometry, wkb
+
 logger = logging.getLogger(__name__)
 
 generic_headers = {
-    'Cache-Control': 'max-age=300'
+    'Cache-Control': 'max-age=86400'
 }
 
 class ServeTile():
@@ -105,6 +107,8 @@ class ServeTile():
                 if Configs.server['log_level'].lower() == 'debug':
                     msg = "{} ** Query was: {}".format(msg, sql)
                     logger.error(msg)
+        # note that the mapbox-vector-tile spec requires a name and features parameter
+        # and the features in turn consists of geometry and properties attributes
         return {"name": layer['name'], "features": features}
 
     @classmethod
@@ -145,18 +149,21 @@ class ServePBF(ServeTile):
     @classmethod
     def geometry(cls, west, south, east, north):
         # TODO: consider setting transform here instead of in config scripts
-        return ('ST_AsText(ST_TransScale(ST_Force2d(%s), %.12f, %.12f, %.12f, %.12f)) as _way'  # noqa
+        return ('ST_TransScale(ST_Force2d(%s), %.12f, %.12f, %.12f, %.12f) as _way'  # noqa
                 % (cls.GEOMETRY, -west, -south,
                    4096 / (east - west),
                    4096 / (north - south)))
 
     @staticmethod
     def geom_processor(geometry):
-        return geometry
+        return wkb.loads(geometry, hex=True)
 
     @staticmethod
     def post_process(layer_data):
-        response_content = mapbox_vector_tile.encode(layer_data)
+        # mapbox-vector-tile can quantize but then this must be set via parameters
+        # otherwise, pass in coordinates in the 4096 standard tile coordinate system
+        # use round_fn=round to specify faster round function rather than default decimal module.
+        response_content = mapbox_vector_tile.encode(layer_data, round_fn=round)
         return 'application/x-protobuf', response_content
 
 
