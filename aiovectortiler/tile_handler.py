@@ -10,6 +10,9 @@ from aiovectortiler.config_handler import Configs
 
 logger = logging.getLogger(__name__)
 
+generic_headers = {
+    'Cache-Control': 'max-age=300'
+}
 
 class ServeTile():
 
@@ -75,7 +78,7 @@ class ServeTile():
                 layer_data.append(await cls.query_layer(layer, zoom, west, south, east, north))
 
         content_type, body = cls.post_process(layer_data)
-        response = Response(content_type=content_type, body=body)
+        response = Response(content_type=content_type, body=body, headers=generic_headers)
 
         # TODO: develop and test some 'request' plugin hooks
         response_hook_response = Configs.plugins.hook('request', response=response, request=request)
@@ -141,6 +144,7 @@ class ServePBF(ServeTile):
 
     @classmethod
     def geometry(cls, west, south, east, north):
+        # TODO: consider setting transform here instead of in config scripts
         return ('ST_AsText(ST_TransScale(ST_Force2d(%s), %.12f, %.12f, %.12f, %.12f)) as _way'  # noqa
                 % (cls.GEOMETRY, -west, -south,
                    4096 / (east - west),

@@ -1,4 +1,6 @@
-import os,sys,inspect
+import os
+import sys
+import inspect
 dir_current = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 dir_parent = os.path.dirname(dir_current)
 sys.path.insert(0, dir_parent)
@@ -7,9 +9,11 @@ import sys
 import logging
 import argparse
 import asyncio
-import uvloop
 
-asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+if not sys.platform.startswith('win32') and not sys.platform.startswith('cygwin'):
+    import uvloop
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+
 from aiohttp import web
 import aiohttp_cors
 
