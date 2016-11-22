@@ -23,6 +23,8 @@ The connection string must be in the `postgres://user:password@host_address:port
 
 The DSN strings are per the [LibPQ connection string format](http://www.postgresql.org/docs/current/static/libpq-connect.html#LIBPQ-CONNSTRING)
 
+> If using docker, set your postgres connection DSN string to an actual IP address, not `localhost`.
+
 #### default_recipe - *optional*
 
 If a default recipe is not provided, then the app will select the first or only recipe file as the 'default'.
