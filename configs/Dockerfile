@@ -8,9 +8,15 @@ RUN apt-get update \
 
 RUN pip3 install pip --upgrade
 
-RUN pip3 install PyYAML aiohttp aiohttp-cors asyncpg mapbox-vector-tile mercantile protobuf ujson uvloop
+RUN pip3 install PyYAML aiohttp aiohttp-cors asyncpg mercantile protobuf ujson uvloop
 
-COPY . /aiovectortiler
+RUN git clone https://github.com/tilezen/mapbox-vector-tile
+WORKDIR /mapbox-vector-tile
+RUN git checkout tags/v1.0.0
+RUN /usr/bin/python3 setup.py install
+
+WORKDIR /
+ADD . /aiovectortiler
 RUN chmod -R 0755 /aiovectortiler
 
 VOLUME /configs
