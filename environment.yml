@@ -2,12 +2,12 @@
 
 name: py35
 dependencies:
-- python=3.5.1=0
-- pip=8.1.2=py35_0
+- python=3.5
+- pip
 - PyYAML
 - ujson
 - pip:
-  - protobuf>=3.0.0b4
+  - protobuf
   - mapbox-vector-tile
   - mercantile
   - asyncpg
