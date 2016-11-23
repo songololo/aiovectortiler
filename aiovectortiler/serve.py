@@ -67,9 +67,9 @@ def serve_tiles(server_configs, layer_recipes, host, port):
         Configs.recipes['default_recipe'].name = 'default_recipe_(same as {0})'.format(default_recipe)
         logger.info('Default recipe set to: {0}'.format(default_recipe))
     except KeyError:
-        logger.info('No default recipe set, using the first or only layer as default.')
-        for first_key in Configs.recipes:
-            Configs.recipes['default_recipe'] = Configs.recipes[first_key]
+        for first_recipe in Configs.recipes:
+            logger.info('No default recipe set, using the first or only recipe as default: "{0}"'.format(first_recipe))
+            Configs.recipes['default_recipe'] = Configs.recipes[first_recipe]
             break
 
     # TODO: develop and test some 'load' plugin hooks

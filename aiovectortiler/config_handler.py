@@ -1,3 +1,4 @@
+import os
 import yaml
 import logging
 
@@ -17,7 +18,12 @@ class Configs:
 
     @classmethod
     def init_layer_recipes(cls, recipe_configs):
-        recipe_name = recipe_configs.split('/')[-1]
+        recipe_name = None
+        if '/' in recipe_configs:
+            recipe_name = os.path.normpath(recipe_configs).split('/')[-1]
+        # for windows
+        elif '\\' in recipe_configs:
+            recipe_name = os.path.normpath(recipe_configs).split('\\')[-1]
         if recipe_name[-4:] == '.yml':
             recipe_name = recipe_name[:-4]
         elif recipe_name[-5:] == '.yaml':
