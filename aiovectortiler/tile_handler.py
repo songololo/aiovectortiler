@@ -117,9 +117,6 @@ class ServeTile():
         SRID = query.SRID
         bbox = bbox.format(west=west, south=south, east=east, north=north, SRID=SRID)
         pixel_width = cls.CIRCUM / (cls.SIZE * Configs.server['scale']) / 2 ** zoom
-        # constrain pixel width to max 10
-        if pixel_width > 10:
-            pixel_width = 10
         if query.buffer:
             units = query.buffer * pixel_width
             bbox = 'ST_Expand({bbox}, {units})'.format(bbox=bbox, units=units)
