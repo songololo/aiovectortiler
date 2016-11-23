@@ -122,7 +122,7 @@ class ServeTile():
             bbox = 'ST_Expand({bbox}, {units})'.format(bbox=bbox, units=units)
         geometry = cls.geometry(west, south, east, north)
         if query.clip:
-            geometry = geometry.format(way='ST_Intersection({way}, {bbox})')
+            geometry = geometry.format(way='ST_Intersection({way}, {bbox})'.format(way='way', bbox=bbox))
         geometry = geometry.format(way='way')
         sql = query['sql'].replace('!bbox!', bbox)
         sql = sql.replace('!zoom!', str(zoom))
