@@ -6,9 +6,9 @@ import logging
 
 import aiohttp.errors
 from aiohttp.web import Response
-from aiovectortiler.config_handler import Configs
+from shapely import wkb
 
-from shapely import geometry, wkb
+from aiovectortiler.config_handler import Configs
 
 logger = logging.getLogger(__name__)
 
