@@ -11,6 +11,7 @@ class DB(object):
     @classmethod
     async def connect(cls, db_name, dsn_string):
         if db_name not in cls._:
+            logger.info('adding database {0} at {1}'.format(db_name, dsn_string))
             cls._[db_name] = await asyncpg.create_pool(dsn_string, timeout=20)
         # if this is the first entry and if the name is not default, create a link
         # so doing the first db becomes the default, unless overwritten later by subsequent db pool

@@ -1,0 +1,42 @@
+version: '2'
+
+services:
+
+  aiovt_app_1:
+    restart: always
+    image: shongololo/aiovectortiler:latest
+    expose:
+    - 8080
+    volumes:
+    - .:/configs
+    networks:
+    - aiovt_network
+
+  aiovt_app_2:
+    restart: always
+    image: shongololo/aiovectortiler:latest
+    expose:
+     - 8080
+    volumes:
+     - .:/configs
+    networks:
+    - aiovt_network
+
+  nginx:
+    restart: always
+    image: nginx
+    ports:
+    - 8080:8080
+    volumes:
+    - .:/etc/nginx
+    networks:
+    - aiovt_network
+    depends_on:
+    - aiovt_app_1
+    - aiovt_app_2
+    links:
+    - aiovt_app_1
+    - aiovt_app_2
+
+networks:
+  aiovt_network:
