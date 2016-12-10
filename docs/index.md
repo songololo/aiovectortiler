@@ -9,5 +9,7 @@ MVT encoding is performed by Mapzen's [mapbox-vector-tile](https://github.com/ti
 
 It is easy to configure by means of SQL requests provided in YAML recipe files.
 
+It is available via dockerhub: [shongololo/aiovectortiler](https://hub.docker.com/r/shongololo/aiovectortiler/)
+
 An example of a recipe to use with OpenStreetMap data:
 [https://github.com/etalab/utilery-osm-recipe/blob/master/utilery.yml](https://github.com/etalab/utilery-osm-recipe/blob/master/utilery.yml)
