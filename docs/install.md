@@ -2,8 +2,8 @@
 
 ## Compatibility and Requirements
 
-aiovectortiler uses Python 3.5's new asyncio module to provide asynchronous handling of HTTP requests and database communication.
-Python 3.5 is therefore an absolute requirement.
+aiovectortiler uses Python 3.5's asyncio module to provide asynchronous handling of HTTP requests and database communication.
+Python 3.5 is therefore required.
 
 You'll also need access to a running PostGIS database which hosts your data.
 
