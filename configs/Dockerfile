@@ -1,4 +1,7 @@
-# docker build --tag='shongololo/aiovectortiler' --file='configs/Dockerfile' .
+# docker build --tag='shongololo/aiovectortiler' --file='configs/docker_aiovectortiler/Dockerfile' .
+
+# optionally use with docker run -d -p 80:80 -v /var/run/docker.sock:/tmp/docker.sock:ro jwilder/nginx-proxy
+# in which case, launch multiple aiovectortiler containers at the same virtual host to load balance
 
 FROM ubuntu:16.04
 MAINTAINER Gareth Simons <garethsimons@me.com>
@@ -20,7 +23,5 @@ ADD . /aiovectortiler
 RUN chmod -R 0755 /aiovectortiler
 
 VOLUME /configs
-
-EXPOSE 8080
 
 CMD ["/usr/bin/python3", "/aiovectortiler/aiovectortiler/serve.py"]

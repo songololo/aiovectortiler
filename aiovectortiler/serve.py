@@ -156,7 +156,7 @@ if __name__ == '__main__':
     ARGS.add_argument('--port',
                       action="store",
                       dest="port",
-                      default='8080',
+                      default='80',
                       help='The host port')
     ARGS.add_argument('--version', action='version', version=aiovectortiler.VERSION)
 
