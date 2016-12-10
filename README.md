@@ -1,4 +1,5 @@
-# aiovectortiler
+aiovectortiler
+==============
 
 Documentation: http://aiovectortiler.readthedocs.org/
 
@@ -11,7 +12,7 @@ MVT encoding is performed by Mapzen's [mapbox-vector-tile](https://github.com/ti
 
 It is easy to configure by means of SQL requests provided in YAML recipe files. Here is an [example recipe](https://github.com/etalab/utilery-osm-recipe/blob/master/utilery.yml) for OpenStreetMap data.
 
-Note that tests are pending reimplementation for compatibility with the aiohttp ecosystem.
+Tests are pending reimplementation for compatibility with the aiohttp ecosystem.
 
 [![Build Status](https://travis-ci.org/shongololo/aiovectortiler.svg)](https://travis-ci.org/shongololo/aiovectortiler)
 [![Coverage Status](https://coveralls.io/repos/github/shongololo/aiovectortiler/badge.svg?branch=master)](https://coveralls.io/github/shongololo/aiovectortiler?branch=master)

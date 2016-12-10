@@ -7,11 +7,11 @@ FROM ubuntu:16.04
 MAINTAINER Gareth Simons <garethsimons@me.com>
 
 RUN apt-get update \
-    && apt-get install -y git build-essential python3 python3-pip python3-shapely
-
-RUN pip3 install pip --upgrade
-
-RUN pip3 install PyYAML aiohttp aiohttp-cors asyncpg mercantile protobuf ujson uvloop
+    && apt-get install -y git build-essential python3 python3-pip python3-shapely \
+    && pip3 install pip --upgrade \
+    && pip3 install PyYAML aiohttp aiohttp-cors asyncpg mercantile protobuf ujson uvloop
+    && apt-get purge -y --auto-remove pip3 \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN git clone https://github.com/tilezen/mapbox-vector-tile
 WORKDIR /mapbox-vector-tile
