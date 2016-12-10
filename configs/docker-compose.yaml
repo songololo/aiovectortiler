@@ -1,3 +1,7 @@
+# example docker-compose file for two-core setup
+# ideally, setup one container per core
+# see nginx config for configuration of caching
+
 version: '2'
 
 services:
