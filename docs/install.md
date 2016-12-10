@@ -26,7 +26,7 @@ Then run the docker image, binding the exposed `8080` docker container port to y
 and mapping the docker container's `/configs` volume to your aiovectortiler configs directory.
 For example:
 ```
-docker run -i -t -p 8080:80 -v /path/to/local/configs:/configs shongololo/aiovectortiler
+docker run -i -t -p 80:80 -v /path/to/local/configs:/configs shongololo/aiovectortiler
 ```
 > If running the docker container from the command line, use an absolute path to your configs directory.
 
