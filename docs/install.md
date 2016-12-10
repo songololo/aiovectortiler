@@ -7,7 +7,7 @@ Python 3.5 is therefore required.
 
 You'll also need access to a running PostGIS database which hosts your data.
 
-## Installation using docker
+## Using docker
 
 To use with docker, you'll need a directory containing:
 * Your `server_configs.yaml` file;
@@ -22,7 +22,7 @@ aiovectortiler_docker_folder
     - recipe_2.yaml
     - etc.
 ```
-Then run the docker image, binding the exposed `8080` docker container port to your preferred localhost port, 
+Then run the docker image, binding the docker container port `80` to your preferred localhost port, 
 and mapping the docker container's `/configs` volume to your aiovectortiler configs directory.
 For example:
 ```
@@ -31,7 +31,6 @@ docker run -i -t -p 80:80 -v /path/to/local/configs:/configs shongololo/aiovecto
 > If running the docker container from the command line, use an absolute path to your configs directory.
 
 Your aiovectortiler server will now be running and available at `localhost:80`
-
 
 ## Installation from source
 
