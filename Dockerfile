@@ -12,14 +12,14 @@ RUN git clone https://github.com/tilezen/mapbox-vector-tile
 WORKDIR /mapbox-vector-tile
 RUN git checkout tags/v1.0.0
 RUN /usr/bin/python3 setup.py install
+WORKDIR /
 
 RUN apt-get purge -y --auto-remove python3-pip git build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /
 ADD . /aiovectortiler
 RUN chmod -R 0755 /aiovectortiler
 
 VOLUME /configs
 
-CMD ["/usr/bin/python3", "/aiovectortiler/aiovectortiler/serve.py"]
+CMD ["/usr/bin/python3", "aiovectortiler/aiovectortiler/serve.py"]
