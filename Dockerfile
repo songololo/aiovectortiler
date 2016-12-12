@@ -22,4 +22,4 @@ RUN chmod -R 0755 /aiovectortiler
 
 VOLUME /configs
 
-CMD ["/usr/bin/python3", "aiovectortiler/aiovectortiler/serve.py"]
+CMD ["/usr/bin/python3", "/aiovectortiler/aiovectortiler/serve.py"]

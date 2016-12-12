@@ -12,7 +12,11 @@ class DB(object):
     async def connect(cls, db_name, dsn_string):
         if db_name not in cls._:
             logger.info('adding database {0} at {1}'.format(db_name, dsn_string))
-            cls._[db_name] = await asyncpg.create_pool(dsn_string, timeout=20)
+            try:
+                cls._[db_name] = await asyncpg.create_pool(dsn_string, timeout=20)
+            except TimeoutError as e:
+                logger.error(e)
+                raise TimeoutError('...unable to connect to db, timeout error, please check your DSN connection string')
         # if this is the first entry and if the name is not default, create a link
         # so doing the first db becomes the default, unless overwritten later by subsequent db pool
         if len(cls._) == 1 and db_name != 'default':
