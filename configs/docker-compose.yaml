@@ -10,7 +10,7 @@ services:
     restart: always
     image: shongololo/aiovectortiler:latest
     expose:
-    - 8080
+    - 80
     volumes:
     - .:/configs
     networks:
@@ -20,7 +20,7 @@ services:
     restart: always
     image: shongololo/aiovectortiler:latest
     expose:
-     - 8080
+     - 80
     volumes:
      - .:/configs
     networks:
