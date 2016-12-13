@@ -32,6 +32,9 @@ docker run -i -t -p 80:80 -v /path/to/local/configs:/configs shongololo/aiovecto
 
 Your aiovectortiler server will now be running and available at `localhost:80`
 
+For higher throughput, deploy a separate aiovectortiler instance for each available CPU core. 
+See `docker-compose.yaml`file and the accompanying `nginx.conf` file for an example load-balancing reverse-proxy configuration with caching.
+
 ## Installation from source
 
 First make sure that your environment has `python 3.5`, `pip`, `git`, `shapely`, and `protobuf` installed.

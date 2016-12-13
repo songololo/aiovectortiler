@@ -6,13 +6,13 @@ version: '2'
 
 services:
 
-  aiovt_app_1:
+  aiovt_app_1:  # must correspond to your server names in nginx.conf
     restart: always
     image: shongololo/aiovectortiler:latest
     expose:
-    - 80
+    - 80  # must correspond to your port number in nginx.conf
     volumes:
-    - .:/configs
+    - .:/configs  # for loading the server configs and layer_recipes folder
     networks:
     - aiovt_network
 
@@ -30,9 +30,9 @@ services:
     restart: always
     image: nginx
     ports:
-    - 8080:8080
+    - 8080:8080 # map your exterior port to nginx config's listening port
     volumes:
-    - .:/etc/nginx
+    - .:/etc/nginx # for loading the nginx.conf file from your configs folder
     networks:
     - aiovt_network
     depends_on:
