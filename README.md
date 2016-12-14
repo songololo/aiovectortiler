@@ -12,7 +12,28 @@ MVT encoding is performed by Mapzen's [mapbox-vector-tile](https://github.com/ti
 
 Layer configuration is by means of YAML recipe files. Here is an [example recipe](https://github.com/etalab/utilery-osm-recipe/blob/master/utilery.yml) for OpenStreetMap data.
 
-Tests are pending reimplementation for compatibility with the aiohttp ecosystem.
+To use with docker, you'll need a directory containing:
+* Your `server_configs.yaml` file;
+* A `layer_recipes` folder.
 
-[![Build Status](https://travis-ci.org/shongololo/aiovectortiler.svg)](https://travis-ci.org/shongololo/aiovectortiler)
-[![Coverage Status](https://coveralls.io/repos/github/shongololo/aiovectortiler/badge.svg?branch=master)](https://coveralls.io/github/shongololo/aiovectortiler?branch=master)
+Your directory should now look something like this:
+```
+aiovectortiler_docker_folder
+ - server_configs.yaml
+ - layer_recipes
+    - recipe_1.yaml
+    - recipe_2.yaml
+    - etc.
+```
+Then run the docker image, binding the docker container port `80` to your preferred localhost port, 
+and mapping the docker container's `/configs` volume to your aiovectortiler configs directory.
+For example:
+```
+docker run -i -t -p 80:80 -v /path/to/local/configs:/configs shongololo/aiovectortiler
+```
+> If running the docker container from the command line, use an absolute path to your configs directory.
+
+Your aiovectortiler server will now be running and available at `localhost:80`
+
+For higher throughput, deploy a separate aiovectortiler instance for each available CPU core. 
+See `configs/docker-compose.yaml`file and the accompanying `configs/nginx.conf` file for an example load-balancing reverse-proxy configuration with caching.
