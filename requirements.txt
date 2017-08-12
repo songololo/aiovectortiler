@@ -1,7 +1,6 @@
 PyYAML
 shapely
-aiohttp
-aiohttp-cors
+sanic
 asyncpg
 mapbox-vector-tile
 mercantile

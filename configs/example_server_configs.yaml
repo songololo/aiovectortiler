@@ -1,15 +1,16 @@
 log_level: 'info'
-databases:
-  default: 'postgres://user:password@host_address:port_number/database_name'
+database:
+  host: db_host
+  port: db_port
+  database: db_name
+  user: db_user
+  password: db_password
 default_recipe: 'example_recipe'
 SRID: 3857  # optional global parameter
 scale: 1  # optional global parameter
 buffer: 0  # optional global parameter
 clip: False  # optional global parameter
 CORS: '*'
-
-builtin_plugins: []
-plugins: []
 
 tileJSON_spec: >
   {"tilejson": "2.1.0",

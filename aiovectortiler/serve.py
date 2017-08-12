@@ -8,18 +8,13 @@ sys.path.insert(0, dir_parent)
 import sys
 import logging
 import argparse
-import asyncio
+import asyncpg
 
-if not sys.platform.startswith('win32') and not sys.platform.startswith('cygwin'):
-    import uvloop
-    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
-
-from aiohttp import web
-import aiohttp_cors
+from sanic import Sanic
+from sanic import response
 
 import aiovectortiler
 from aiovectortiler.config_handler import Configs
-from aiovectortiler.plugin_handler import Plugins
 from aiovectortiler.db_handler import DB
 from aiovectortiler.tile_handler import ServePBF, ServeGeoJSON, ServeJSON, TileJson
 
@@ -44,14 +39,6 @@ def serve_tiles(server_configs, layer_recipes, host, port):
     logger = logging.getLogger(__name__)
     logger.info('STARTING ASYNCIO TILE SERVER APP')
 
-    # load plugins
-    logger.info('Loading plugins')
-    Configs.plugins = Plugins
-    Configs.plugins.load(Configs.server)
-
-    # TODO: develop and test some 'before_load' plugin hooks
-    Configs.plugins.hook('before_load', config=Configs.server)
-
     # set the layer configs
     for file in os.listdir(os.path.abspath(layer_recipes)):
         if file.endswith('.yaml') or file.endswith('.yml'):
@@ -72,67 +59,41 @@ def serve_tiles(server_configs, layer_recipes, host, port):
             Configs.recipes['default_recipe'] = Configs.recipes[first_recipe]
             break
 
-    # TODO: develop and test some 'load' plugin hooks
-    Configs.plugins.hook('load', config=Configs.server, recipes=Configs.recipes)
-
     # create server app
     logger.info('Creating the server app')
-    app = web.Application()
+    app = Sanic(__name__)
 
     # setup url routes and corresponding handlers
-    async def request_pbf(request):
-        return await ServePBF.serve(request)
-    app.router.add_route('GET', '/{layers}/{z}/{x}/{y}.pbf', request_pbf)
-    app.router.add_route('GET', '/{recipe}/{layers}/{z}/{x}/{y}.pbf', request_pbf)
-    app.router.add_route('GET', '/{layers}/{z}/{x}/{y}.mvt', request_pbf)
-    app.router.add_route('GET', '/{recipe}/{layers}/{z}/{x}/{y}.mvt', request_pbf)
+    app.add_route(ServePBF.serve, '/{layers}/{z}/{x}/{y}.pbf')
+    app.add_route(ServePBF.serve, '/{recipe}/{layers}/{z}/{x}/{y}.pbf')
+    app.add_route(ServePBF.serve, '/{layers}/{z}/{x}/{y}.mvt')
+    app.add_route(ServePBF.serve, '/{recipe}/{layers}/{z}/{x}/{y}.mvt')
 
-    async def request_geojson(request):
-        return await ServeGeoJSON.serve(request)
-    app.router.add_route('GET', '/{layers}/{z}/{x}/{y}.geojson', request_geojson)
-    app.router.add_route('GET', '/{recipe}/{layers}/{z}/{x}/{y}.geojson', request_geojson)
+    app.add_route(ServeGeoJSON.serve, '/{layers}/{z}/{x}/{y}.geojson')
+    app.add_route(ServeGeoJSON.serve, '/{recipe}/{layers}/{z}/{x}/{y}.geojson')
 
-    async def request_json(request):
-        return await ServeJSON.serve(request)
-    app.router.add_route('GET', '/{layers}/{z}/{x}/{y}.json', request_json)
-    app.router.add_route('GET', '/{recipe}/{layers}/{z}/{x}/{y}.json', request_json)
+    app.add_route(ServeJSON.serve, '/{layers}/{z}/{x}/{y}.json')
+    app.add_route(ServeJSON.serve, '/{recipe}/{layers}/{z}/{x}/{y}.json')
 
-    #TODO: confirm and test request_tilejson
+    @app.route('/tilejson/mvt.json')
     async def request_tilejson(request):
         content_type, body = TileJson.get()
-        return web.Response(content_type=content_type, body=body.encode())
-    app.router.add_route('GET', '/tilejson/mvt.json', request_tilejson)
-
-
-    # configure CORS
-    try:
-        cors_config = Configs.server['CORS']
-        logger.warning('CORS set to {0}'.format(cors_config))
-    except KeyError:
-        cors_config = '*'
-        logger.warning('No CORS setting provided in server config file. Setting CORS to "*"')
-    cors = aiohttp_cors.setup(app, defaults={
-        cors_config: aiohttp_cors.ResourceOptions(
-            allow_credentials=True,
-            expose_headers=cors_config,
-            allow_headers=cors_config
-        )
-    })
-    for route in list(app.router.routes()):
-        cors.add(route)
-
+        return response.text(body.encode(), content_type=content_type)
 
     # start the database pool
     logger.info('Creating the database pool')
-    Configs.DB = DB  # create the DB instance
-    loop = asyncio.get_event_loop()
-    for db_name, dsn_string in Configs.server['databases'].items():
-        loop.run_until_complete(Configs.DB.connect(db_name, dsn_string)) # this is an awaitable async so use run_until_complete
+    Configs.DB = DB(app)  # create the DB instance
 
-    # start the server
-    logger.info('Starting the server app at host: {0}, port: {1}'.format(host, port))
-    web.run_app(app, host=host, port=int(port))
-
+    # use this approach to piggy-back the sanic uvloop event loop
+    @app.listener('before_server_start')
+    async def register_db(app, loop):
+        app.pool = await asyncpg.create_pool(
+            host=Configs.server['database']['host'],
+            port=Configs.server['database']['port'],
+            database=Configs.server['database']['database'],
+            user=Configs.server['database']['user'],
+            password=Configs.server['database']['password'],
+            loop=loop)
 
 if __name__ == '__main__':
 

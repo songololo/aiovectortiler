@@ -12,16 +12,16 @@ Layer recipe configuration is provided by means of a folder containing one or mo
 
 The server configuration file sets several important parameters for your app.
 
-#### databases (dict) - *required*
+#### database - *required*
 
-At least one database connection must be provided. Use the `default` key for your primary (or only) database.
-The connection string must be in the `postgres://user:password@host_address:port_number/database_name` format.
+Database connection parameters:
 
-    databases:
-      default: 'postgres://user:password@host_address:port_number/database_name?option=value'
-      another_db: 'another connection string'
-
-The DSN strings are per the [LibPQ connection string format](http://www.postgresql.org/docs/current/static/libpq-connect.html#LIBPQ-CONNSTRING)
+    database:
+      host: db_host
+      port: db_port
+      database: db_name
+      user: db_user
+      password: db_password
 
 > If using docker, set your postgres connection DSN string to an actual IP address, not `localhost`.
 
@@ -50,21 +50,6 @@ The global SRID system for the tile system. This should ordinarily be 3857.
 Domains for permitted CORS requests. Set this to * to permit all cross origin requests. This is useful for development.
  
     CORS: '*'
-
-#### builtin_plugins (list)
-
-    builtin_plugins:
-    - 'aiovectortiler.plugins.builtins.plugin_name'
-
-A list of built-in [plugins](plugins.md) to optionally activate.
-
-#### plugins (list)
-
-    plugins:
-    - /path/to/plugin
-
-A list of paths to optional [plugins](plugins.md).
-
 
 #### tileJSON_spec (dict)
 

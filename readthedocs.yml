@@ -1,4 +1,0 @@
-# TODO: remove this file later. Presently a workaround for building docs in readthedocs.
-
-conda:
-    file: environment.yml

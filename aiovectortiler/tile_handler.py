@@ -4,8 +4,8 @@ import mercantile
 import mapbox_vector_tile
 import logging
 
-import aiohttp.errors
-from aiohttp.web import Response
+from sanic import response
+
 from shapely import wkb
 
 from aiovectortiler.config_handler import Configs
@@ -32,14 +32,6 @@ class ServeTile():
     @classmethod
     async def serve(cls, request):
 
-        # TODO: develop and test some 'request' plugin hooks
-        endpoint = request.path.split('.')[-1]
-        path_args = request.match_info
-        request_hook_response = Configs.plugins.hook('request', endpoint=endpoint, request=request, **path_args)
-        # if a request_hook_response is received, return and skip the regular processing:
-        if request_hook_response:
-            return request_hook_response
-
         # fetch query parameters from request info
         x = int(request.match_info['x'])
         y = int(request.match_info['y'])
@@ -50,10 +42,10 @@ class ServeTile():
         except KeyError:
             recipe_name = 'default_recipe'
 
-        # check that recipe exists
-        if recipe_name not in Configs.recipes.keys():
-            logger.error('Recipe {0} not found in recipes'.format(recipe_name))
-            return aiohttp.errors.HttpBadRequest('Recipe {0} not found in recipes'.format(recipe_name))
+        # TODO: send exception in response
+        # if recipe_name not in Configs.recipes.keys():
+        #    logger.error('Recipe {0} not found in recipes'.format(recipe_name))
+        #    return aiohttp.errors.HttpBadRequest('Recipe {0} not found in recipes'.format(recipe_name))
 
         # fetch recipe
         recipe = Configs.recipes[recipe_name]
@@ -74,22 +66,13 @@ class ServeTile():
         for layer_name in layers:
             if layer_name not in recipe.layers.keys():
                 logger.error('Layer {0} not found in recipe {1}'.format(layer_name, recipe_name))
-                return aiohttp.errors.HttpBadRequest('Layer {0} not found in layer config file'.format(layer_name))
+                # TODO: send exception in response
+                # return aiohttp.errors.HttpBadRequest('Layer {0} not found in layer config file'.format(layer_name))
             else:
                 layer = recipe.layers[layer_name]
                 layer_data.append(await cls.query_layer(layer, zoom, west, south, east, north))
 
-        content_type, body = cls.post_process(layer_data)
-        response = Response(content_type=content_type, body=body, headers=generic_headers)
-
-        # TODO: develop and test some 'request' plugin hooks
-        response_hook_response = Configs.plugins.hook('request', response=response, request=request)
-        # if a response_hook_response is received, it overrides the regular response:
-        if response_hook_response:
-            return response_hook_response
-        else:
-            return response
-
+        return cls.post_process(layer_data)
 
     @classmethod
     async def query_layer(cls, layer, zoom, west, south, east, north):
@@ -164,6 +147,7 @@ class ServePBF(ServeTile):
         # otherwise, pass in coordinates in the 4096 standard tile coordinate system
         # use round_fn=round to specify faster round function rather than default decimal module.
         response_content = mapbox_vector_tile.encode(layer_data, round_fn=round)
+        #TODO: figure out protocol buffers response type for sanic
         return 'application/x-protobuf', response_content
 
 
@@ -180,7 +164,7 @@ class ServeJSON(ServeTile):
     @staticmethod
     def post_process(layer_data):
         response_content = ujson.dumps(layer_data)
-        return 'application/json', response_content.encode()
+        return response.json(response_content.encode())
 
 
 class ServeGeoJSON(ServeJSON):
@@ -196,7 +180,7 @@ class ServeGeoJSON(ServeJSON):
             "type": "FeatureCollection",
             "features": layer_data
         })
-        return 'application/json', response_content.encode()
+        return response.json(response_content.encode())
 
 
 class TileJson():
@@ -213,4 +197,4 @@ class TileJson():
                     "description": layer.description,
                     "id": layer.name
                 })
-        return 'application/json', ujson.dumps(base)
+        return response.json(ujson.dumps(base))
