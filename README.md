@@ -6,7 +6,7 @@ aiovectortiler
 Documentation: http://aiovectortiler.readthedocs.org/
 
 aiovectortiler is a Python asynchronous micro vector tile application that serves data from PostGIS. 
-It is based on the [Utilery](https://github.com/tilery/utilery) package created by Yohan Boniface.
+It evolved out of the [Utilery](https://github.com/tilery/utilery) package created by Yohan Boniface.
 
 aiovectortiler can serve vector tiles in json, [geojson](http://geojson.org) and [Mapbox Vector Tile](https://www.mapbox.com/vector-tiles/) formats. 
 It is compatible with with MVT client-side vector tile libraries such as [Mapbox GL JS](https://www.mapbox.com/mapbox-gl-js/api/). 
