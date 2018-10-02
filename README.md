@@ -1,6 +1,8 @@
 aiovectortiler
 ==============
 
+> This was an experimental Python tile-server which is no longer maintained.
+
 Documentation: http://aiovectortiler.readthedocs.org/
 
 aiovectortiler is a Python asynchronous micro vector tile application that serves data from PostGIS. 
